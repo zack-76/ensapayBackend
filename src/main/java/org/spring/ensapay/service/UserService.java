@@ -102,6 +102,13 @@ public class UserService {
         return "Agent succesffuly added" ;
     }
 
+/*
+    public String resetPassword(String email) {
+
+        return email;
+    }
+
+ */
 
     public void sendEmail(User user, String otpPassword) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
@@ -160,4 +167,6 @@ public class UserService {
         userRepository.save(backOfficeUser);
 
     }
+
+
 }

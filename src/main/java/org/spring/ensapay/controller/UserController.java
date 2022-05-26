@@ -31,6 +31,14 @@ public class UserController {
 
         return userService.registerNewUserClient(user);
     }
+/*
+    @PutMapping("/resetpassword/{email}")
+    public String resetPassword(@PathVariable("email") String email){
+        return userService.resetPassword(email);
+
+    }
+
+ */
 
 
     @PostMapping("/regiterNewUserAgent")
