@@ -25,24 +25,24 @@ public class UserController {
 
 
     @PostMapping("/regiterNewUserClient")
-    //@PreAuthorize("hasRole(Agent)")
+    @PreAuthorize("hasRole('Agent')")
     public String regiterNewUserClient(@RequestBody User user) throws MessagingException,
             UnsupportedEncodingException {
 
         return userService.registerNewUserClient(user);
     }
-/*
-    @PutMapping("/resetpassword/{email}")
-    public String resetPassword(@PathVariable("email") String email){
-        return userService.resetPassword(email);
 
+
+    @PutMapping("/resetpassword/{email}")
+    @PreAuthorize("hasAnyRole('BackOffice','Agent','Client')")
+    public String resetPassword(@PathVariable("email") String email,@RequestBody String userPassword){
+        return userService.resetPassword(userPassword,email);
     }
 
- */
 
 
     @PostMapping("/regiterNewUserAgent")
-    //@PreAuthorize("hasRole(BackOffice)")
+    @PreAuthorize("hasRole('BackOffice')")
     public String regiterNewUserAgent(@RequestBody User user) throws MessagingException,
             UnsupportedEncodingException {
 

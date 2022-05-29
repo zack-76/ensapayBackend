@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -17,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
+@Transactional
 @Service
 public class UserService {
 
@@ -53,11 +55,7 @@ public class UserService {
         client.setSolde(user.getSolde());
         client.setUserPassword(encodedPassword);
         client.setRole(roles);
-/*
-        Set<User> users = new HashSet<>();
-        users.add(user);
-        role.setUsers(users);
-*/
+
         userRepository.save(client);
 
         sendEmail(user,generatedPassword);
@@ -88,12 +86,6 @@ public class UserService {
         agent.setUserName(user.getUserName());
         agent.setUserPassword(encodedPassword);
         agent.setRole(roles);
-/*
-        Set<User> users = new HashSet<>();
-        users.add(user);
-        role.setUsers(users);
-
- */
 
         userRepository.save(agent);
 
@@ -102,13 +94,13 @@ public class UserService {
         return "Agent succesffuly added" ;
     }
 
-/*
-    public String resetPassword(String email) {
 
-        return email;
+    public String resetPassword(String userPassword , String email) {
+        String newEncodedPassword = passwordEncoder.encode(userPassword);
+        userRepository.updateUserPasswordByUserName(newEncodedPassword , email);
+        return "Password reset ...";
     }
 
- */
 
     public void sendEmail(User user, String otpPassword) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
