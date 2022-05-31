@@ -13,7 +13,7 @@ public class User {
     private String userLastName;
     private String userPhone;
     private String userCIN;
-    private Integer solde;
+    private Integer clientSolde;
     private String userPassword;
     private String clientProduct;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -91,11 +91,11 @@ public class User {
         this.userCIN = userCIN;
     }
 
-    public Integer getSolde() {
-        return solde;
+    public Integer getClientSolde() {
+        return clientSolde;
     }
 
-    public void setSolde(Integer solde) {
-        this.solde = solde;
+    public void setClientSolde(Integer clientSolde) {
+        this.clientSolde = clientSolde;
     }
 }

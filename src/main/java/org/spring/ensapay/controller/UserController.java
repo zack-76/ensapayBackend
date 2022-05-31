@@ -17,7 +17,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     @PostConstruct
     public void initRoleAndUser() {
         userService.initRoleAndUser();
@@ -25,11 +24,19 @@ public class UserController {
 
 
     @PostMapping("/regiterNewUserClient")
-    @PreAuthorize("hasRole('Agent')")
+    //@PreAuthorize("hasRole('Agent')")
     public String regiterNewUserClient(@RequestBody User user) throws MessagingException,
             UnsupportedEncodingException {
 
         return userService.registerNewUserClient(user);
+    }
+
+    @PostMapping("/regiterNewUserAgent")
+    //@PreAuthorize("hasRole('BackOffice')")
+    public String regiterNewUserAgent(@RequestBody User user) throws MessagingException,
+            UnsupportedEncodingException {
+
+        return userService.registerNewUserAgent(user);
     }
 
 
@@ -40,30 +47,10 @@ public class UserController {
     }
 
 
-
-    @PostMapping("/regiterNewUserAgent")
-    @PreAuthorize("hasRole('BackOffice')")
-    public String regiterNewUserAgent(@RequestBody User user) throws MessagingException,
-            UnsupportedEncodingException {
-
-        return userService.registerNewUserAgent(user);
+    @GetMapping("/client/solde/{email}")
+    //@PreAuthorize("hasRole('Client')")
+    public Integer ClientSolde(@PathVariable("email") String email){
+        return userService.getSolde(email);
     }
 
-    @GetMapping("/forBackOffice")
-    @PreAuthorize("hasRole('BackOffice')")
-    public String forBackOffice(){
-        return "just for BackOffice";
-    }
-
-    @GetMapping("/forAgent")
-    @PreAuthorize("hasRole('Agent')")
-    public String forAgent(){
-        return "just for Agent";
-    }
-
-    @GetMapping("/forClient")
-    @PreAuthorize("hasRole('Client')")
-    public String forClient(){
-        return "just for Client";
-    }
 }

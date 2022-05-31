@@ -34,6 +34,7 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+
     public String registerNewUserClient(User user) throws MessagingException,
             UnsupportedEncodingException {
 
@@ -52,7 +53,7 @@ public class UserService {
         client.setUserCIN(user.getUserCIN());
         client.setUserName(user.getUserName());
         client.setClientProduct(user.getClientProduct());
-        client.setSolde(user.getSolde());
+        client.setClientSolde(user.getClientSolde());
         client.setUserPassword(encodedPassword);
         client.setRole(roles);
 
@@ -106,7 +107,7 @@ public class UserService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        helper.setFrom("zakariaessabri@outlook.com");
+        helper.setFrom("ensapay2022@outlook.com");
         helper.setTo(user.getUserName());
 
         String subject = "Here's your One Time Password (One Time Password)";
@@ -126,7 +127,6 @@ public class UserService {
     }
 
     public void initRoleAndUser() {
-
         Role agentRole = new Role();
         agentRole.setRoleName("Agent");
         roleRepository.save(agentRole);
@@ -151,14 +151,14 @@ public class UserService {
         Set<Role> roleBack = new HashSet<>();
         roleBack.add(roleBackOffice);
         backOfficeUser.setRole(roleBack);
-/*
-        Set<User> userBack = new HashSet<>();
-        userBack.add(backOfficeUser);
-        roleBackOffice.setUsers(userBack);*/
 
         userRepository.save(backOfficeUser);
 
     }
 
 
+
+    public Integer getSolde(String email) {
+        return userRepository.findClientSoldeByUserName(email);
+    }
 }
