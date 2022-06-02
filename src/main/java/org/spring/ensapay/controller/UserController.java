@@ -40,17 +40,17 @@ public class UserController {
     }
 
 
-    @PutMapping("/resetpassword/{email}")
+    @PutMapping("/resetpassword/{userPhone}")
     @PreAuthorize("hasAnyRole('BackOffice','Agent','Client')")
-    public String resetPassword(@PathVariable("email") String email,@RequestBody String userPassword){
-        return userService.resetPassword(userPassword,email);
+    public String resetPassword(@PathVariable("userPhone") String userPhone,@RequestBody String userPassword){
+        return userService.resetPassword(userPassword,userPhone);
     }
 
 
-    @GetMapping("/client/solde/{email}")
+    @GetMapping("/client/solde/{userPhone}")
     //@PreAuthorize("hasRole('Client')")
-    public Integer ClientSolde(@PathVariable("email") String email){
-        return userService.getSolde(email);
+    public Integer ClientSolde(@PathVariable("userPhone") String userPhone){
+        return userService.getSolde(userPhone);
     }
 
 }

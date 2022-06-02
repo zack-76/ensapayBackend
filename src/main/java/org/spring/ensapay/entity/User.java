@@ -8,14 +8,15 @@ public class User {
 
     //Attributes
     @Id
-    private String userName;//email
+    private String userPhone;  // signin using phoneNumber
     private String userFirstName;
     private String userLastName;
-    private String userPhone;
+    private String userAddress;
+    private String userBirthDate;
+    private String userEmail;
     private String userCIN;
     private Integer clientSolde;
     private String userPassword;
-    private String clientProduct;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_ROLE",
             joinColumns = {
@@ -52,12 +53,28 @@ public class User {
         this.userPhone = userPhone;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUserAddress() {
+        return userAddress;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserAddress(String userAddress) {
+        this.userAddress = userAddress;
+    }
+
+    public String getUserBirthDate() {
+        return userBirthDate;
+    }
+
+    public void setUserBirthDate(String userBirthDate) {
+        this.userBirthDate = userBirthDate;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public String getUserPassword() {
@@ -68,13 +85,6 @@ public class User {
         this.userPassword = userPassword;
     }
 
-    public String getClientProduct() {
-        return clientProduct;
-    }
-
-    public void setClientProduct(String clientProduct) {
-        this.clientProduct = clientProduct;
-    }
 
     public Set<Role> getRole() {
         return role;

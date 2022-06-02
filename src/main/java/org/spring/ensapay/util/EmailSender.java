@@ -21,7 +21,7 @@ public class EmailSender {
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
         helper.setFrom("ensapay202205@outlook.com");
-        helper.setTo(user.getUserName());
+        helper.setTo(user.getUserEmail());
 
         String subject = "Here's your One Time Password (One Time Password)";
 

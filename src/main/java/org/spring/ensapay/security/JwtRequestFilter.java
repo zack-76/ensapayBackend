@@ -31,13 +31,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String requestTokenHeader = request.getHeader("Authorization");
 
-        String userName = null;
+        String userPhone = null;
         String jwtToken = null;
 
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
-                userName = jwtUtil.getUsernameFromToken(jwtToken);
+                userPhone = jwtUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
                 System.out.println("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
@@ -47,9 +47,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             System.out.println("JWT token does not start with Bearer");
         }
 
-        if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (userPhone != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails = jwtService.loadUserByUsername(userName);
+            UserDetails userDetails = jwtService.loadUserByUsername(userPhone);
 
             if (jwtUtil.validateToken(jwtToken, userDetails)) {
 

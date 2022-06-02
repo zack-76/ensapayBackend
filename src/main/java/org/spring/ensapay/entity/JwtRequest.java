@@ -2,15 +2,15 @@ package org.spring.ensapay.entity;
 
 public class JwtRequest {
 
-    private String userName; //email
+    private String userPhone; //phone
     private String userPassword;
 
-    public String getUserName() {
-        return userName;
+    public String getUserPhone() {
+        return userPhone;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 
     public String getUserPassword() {

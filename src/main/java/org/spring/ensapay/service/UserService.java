@@ -8,13 +8,11 @@ import org.spring.ensapay.repository.UserRepository;
 import org.spring.ensapay.util.EmailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
@@ -55,8 +53,9 @@ public class UserService {
         client.setUserLastName(user.getUserLastName());
         client.setUserPhone(user.getUserPhone());
         client.setUserCIN(user.getUserCIN());
-        client.setUserName(user.getUserName());
-        client.setClientProduct(user.getClientProduct());
+        client.setUserAddress(user.getUserAddress());
+        client.setUserBirthDate(user.getUserBirthDate());
+        client.setUserEmail(user.getUserEmail());
         client.setClientSolde(user.getClientSolde());
         client.setUserPassword(encodedPassword);
         client.setRole(roles);
@@ -87,8 +86,10 @@ public class UserService {
         agent.setUserFirstName(user.getUserFirstName());
         agent.setUserLastName(user.getUserLastName());
         agent.setUserPhone(user.getUserPhone());
+        agent.setUserAddress(user.getUserAddress());
+        agent.setUserBirthDate(user.getUserBirthDate());
         agent.setUserCIN(user.getUserCIN());
-        agent.setUserName(user.getUserName());
+        agent.setUserEmail(user.getUserEmail());
         agent.setUserPassword(encodedPassword);
         agent.setRole(roles);
 
@@ -120,11 +121,13 @@ public class UserService {
         //Adding BackOffice to Role table and backOfficeUser to User table
 
         User backOfficeUser = new User();
-        backOfficeUser.setUserFirstName("BackOfficeFIRSTNAME");
-        backOfficeUser.setUserLastName("BackOfficeLASTNAME");
+        backOfficeUser.setUserFirstName("Zakaria");
+        backOfficeUser.setUserLastName("Essabri");
         backOfficeUser.setUserPhone("0671886710");
+        backOfficeUser.setUserAddress("Casablanca");
+        backOfficeUser.setUserBirthDate("16-10-1999");
         backOfficeUser.setUserCIN("BJ908070");
-        backOfficeUser.setUserName("zaka.raja.1949@gmail.com");
+        backOfficeUser.setUserEmail("zaka.raja.1949@gmail.com");
         backOfficeUser.setUserPassword(passwordEncoder.encode("backOffice123"));
 
         Role roleBackOffice = new Role();
