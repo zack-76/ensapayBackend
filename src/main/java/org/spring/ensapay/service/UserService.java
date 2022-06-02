@@ -5,6 +5,7 @@ import org.spring.ensapay.entity.Role;
 import org.spring.ensapay.entity.User;
 import org.spring.ensapay.repository.RoleRepository;
 import org.spring.ensapay.repository.UserRepository;
+import org.spring.ensapay.util.EmailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -34,6 +35,9 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailSender emailSender;
+
 
     public String registerNewUserClient(User user) throws MessagingException,
             UnsupportedEncodingException {
@@ -59,7 +63,7 @@ public class UserService {
 
         userRepository.save(client);
 
-        sendEmail(user,generatedPassword);
+        emailSender.sendEmail(user,generatedPassword);
 
         return "Client succesffuly added" ;
     }
@@ -90,7 +94,7 @@ public class UserService {
 
         userRepository.save(agent);
 
-        sendEmail(user,generatedPassword);
+        emailSender.sendEmail(user,generatedPassword);
 
         return "Agent succesffuly added" ;
     }
@@ -102,29 +106,6 @@ public class UserService {
         return "Password reset ...";
     }
 
-
-    public void sendEmail(User user, String otpPassword) throws MessagingException, UnsupportedEncodingException {
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
-
-        helper.setFrom("ensapay2022@outlook.com");
-        helper.setTo(user.getUserName());
-
-        String subject = "Here's your One Time Password (One Time Password)";
-
-        String content = "<p>Hello " + user.getUserFirstName() + " "+user.getUserLastName()+"</p>"
-                + "<p>For security reason, you're required to use the following "
-                + "One Time Password to login:</p>"
-                + "<p><b>" + otpPassword + "</b></p>"
-                + "<br>"
-                + "<p>Note: this One Time Password will let you login to our platform.</p>";
-
-        helper.setSubject(subject);
-
-        helper.setText(content, true);
-
-        mailSender.send(message);
-    }
 
     public void initRoleAndUser() {
         Role agentRole = new Role();
@@ -161,4 +142,5 @@ public class UserService {
     public Integer getSolde(String email) {
         return userRepository.findClientSoldeByUserName(email);
     }
+
 }
