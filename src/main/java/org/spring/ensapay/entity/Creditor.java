@@ -1,10 +1,16 @@
 package org.spring.ensapay.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Creditor {
 
     @Id
@@ -19,35 +25,4 @@ public class Creditor {
     )
     private Set<Debt> debts;
 
-    public String getCodeCreditor() {
-        return codeCreditor;
     }
-
-    public void setCodeCreditor(String codeCreditor) {
-        this.codeCreditor = codeCreditor;
-    }
-
-    public String getNameCredior() {
-        return nameCreditor;
-    }
-
-    public void setNameCredior(String nameCreditor) {
-        this.nameCreditor = nameCreditor;
-    }
-
-    public String getCategorieCreditor() {
-        return categorieCreditor;
-    }
-
-    public void setCategorieCreditor(String categorieCreditor) {
-        this.categorieCreditor = categorieCreditor;
-    }
-
-    public Set<Debt> getDebts() {
-        return debts;
-    }
-
-    public void setDebts(Set<Debt> debts) {
-        this.debts = debts;
-    }
-}

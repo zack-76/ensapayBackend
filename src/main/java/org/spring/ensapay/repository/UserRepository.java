@@ -7,17 +7,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
 
 
     @Modifying
-    @Query("update User u set u.userPassword =:userPassword where u.userPhone=:userPhone")
-    void updateUserPasswordByUserName(@Param("userPassword") String userPassword,@Param("userPhone") String userPhone);
+    @Query("update User u set u.userPassword =:userPassword where u.username=:username")
+    void updateUserPasswordByUserName(@Param("userPassword") String userPassword,@Param("username") String username);
 
-    @Query("select u.clientSolde from User u where u.userPhone=:userPhone")
-    Integer findClientSoldeByUserName(String userPhone);
+    Optional<User> findById(String username);
 }
 

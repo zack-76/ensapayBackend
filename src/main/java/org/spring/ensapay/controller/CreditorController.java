@@ -8,11 +8,12 @@ import javax.annotation.PostConstruct;
 
 @RestController
 public class CreditorController {
+
     @Autowired
     private CreditorService creditorService;
 
     @PostConstruct
-    public void addCreditor(){
+    public void initCreditor(){
         creditorService.initCreditors();
     }
 }

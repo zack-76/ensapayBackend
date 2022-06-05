@@ -24,7 +24,7 @@ public class CreditorService {
         Creditor creditorMarocTelecom = new Creditor();
         creditorMarocTelecom.setCodeCreditor("1234ABCD");
         creditorMarocTelecom.setCategorieCreditor("Reseaux & Telecoms");
-        creditorMarocTelecom.setNameCredior("Maroc Telecom");
+        creditorMarocTelecom.setNameCreditor("Maroc Telecom");
         Debt debt1 = new Debt();
         debt1.setCodeDebt("1");
         debt1.setNameDebt("PRODUIT INTERNET SIM");
@@ -45,7 +45,7 @@ public class CreditorService {
         Creditor creditorLydec = new Creditor();
         creditorLydec.setCodeCreditor("9876YHOL");
         creditorLydec.setCategorieCreditor("ENERGIE");
-        creditorLydec.setNameCredior("Lydec");
+        creditorLydec.setNameCreditor("Lydec");
         Debt debt4 = new Debt();
         debt4.setCodeDebt("4");
         debt4.setNameDebt("FACTURE LYDEC");

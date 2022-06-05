@@ -1,8 +1,15 @@
 package org.spring.ensapay.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Debt {
 
     @Id
@@ -16,27 +23,4 @@ public class Debt {
     )
     private Creditor creditor;
 
-    public String getCodeDebt() {
-        return codeDebt;
-    }
-
-    public void setCodeDebt(String codeDebt) {
-        this.codeDebt = codeDebt;
-    }
-
-    public String getNameDebt() {
-        return nameDebt;
-    }
-
-    public void setNameDebt(String nameDebt) {
-        this.nameDebt = nameDebt;
-    }
-
-    public Creditor getCreditor() {
-        return creditor;
-    }
-
-    public void setCreditor(Creditor creditor) {
-        this.creditor = creditor;
-    }
 }

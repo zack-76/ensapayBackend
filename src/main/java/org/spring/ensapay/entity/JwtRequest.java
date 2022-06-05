@@ -1,23 +1,14 @@
 package org.spring.ensapay.entity;
 
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class JwtRequest {
 
-    private String userPhone; //phone
+    private String username; //phone for client and username for backoffice and agent
     private String userPassword;
 
-    public String getUserPhone() {
-        return userPhone;
-    }
-
-    public void setUserPhone(String userPhone) {
-        this.userPhone = userPhone;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
 }
