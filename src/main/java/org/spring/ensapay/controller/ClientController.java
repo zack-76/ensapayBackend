@@ -1,6 +1,7 @@
 package org.spring.ensapay.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.spring.ensapay.dto.ClientDto;
 import org.spring.ensapay.entity.Client;
 import org.spring.ensapay.service.ClientService;
 import org.spring.ensapay.service.UserService;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
+import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +22,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@RequestMapping("/client")
 public class ClientController {
 
     @Autowired
@@ -34,7 +37,7 @@ public class ClientController {
 
     @PostMapping("/regiterNewUserClient")
     //@PreAuthorize("hasRole('Agent')")
-    public ResponseEntity<String> regiterNewUserClient(@RequestBody Client client)
+    public ResponseEntity<String> regiterNewUserClient(@Valid @RequestBody ClientDto client)
             throws MessagingException,
             UnsupportedEncodingException {
 

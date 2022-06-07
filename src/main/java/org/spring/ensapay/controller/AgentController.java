@@ -1,20 +1,21 @@
 package org.spring.ensapay.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.spring.ensapay.dto.AgentDto;
 import org.spring.ensapay.entity.Agent;
-import org.spring.ensapay.entity.JwtRequest;
-import org.spring.ensapay.entity.JwtResponse;
 import org.spring.ensapay.service.AgentService;
 import org.spring.ensapay.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
+import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@RequestMapping("/agent")
 public class AgentController {
 
     @Autowired
@@ -35,10 +37,10 @@ public class AgentController {
 
     @PostMapping("/regiterNewUserAgent")
     @PreAuthorize("hasRole('BackOffice')")
-    public ResponseEntity<String> regiterNewUserAgent(@RequestBody Agent agent) throws MessagingException,
+    public ResponseEntity<String> regiterNewUserAgent(@RequestBody @Valid AgentDto agent) throws MessagingException,
             UnsupportedEncodingException {
-
         return ResponseEntity.status(HttpStatus.OK).body(agentService.registerNewUserAgent(agent));
+
     }
 
 
@@ -62,4 +64,5 @@ public class AgentController {
     public String forBackoffice(){
         return "just Agent";
     }
+
 }

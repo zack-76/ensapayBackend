@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -22,7 +25,7 @@ public class UserController {
 
     @PutMapping("/resetpassword/{username}")
     //@PreAuthorize("hasAnyRole('Agent','Client')")
-    public String resetPassword(@PathVariable("username") String username,@RequestBody String userPassword){
+    public String resetPassword(@PathVariable("username") String username,@Valid @RequestBody String userPassword){
         return userService.resetPassword(userPassword,username);
     }
 

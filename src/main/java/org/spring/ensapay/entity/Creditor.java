@@ -15,7 +15,9 @@ public class Creditor {
 
     @Id
     private String codeCreditor;
+    //@NotBlank(message = "name is required")
     private String nameCreditor;
+    //@NotBlank(message = "Category is required")
     private String categorieCreditor;
 
     @OneToMany(cascade = CascadeType.ALL)

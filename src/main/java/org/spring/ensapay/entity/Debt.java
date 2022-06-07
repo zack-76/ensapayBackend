@@ -14,6 +14,7 @@ public class Debt {
 
     @Id
     private String codeDebt;
+    //@NotBlank(message = "Name is required")
     private String nameDebt;
 
     @ManyToOne(cascade = CascadeType.ALL)

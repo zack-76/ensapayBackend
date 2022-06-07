@@ -1,6 +1,7 @@
 package org.spring.ensapay.service;
 
 import net.bytebuddy.utility.RandomString;
+import org.spring.ensapay.dto.AgentDto;
 import org.spring.ensapay.entity.Agent;
 import org.spring.ensapay.entity.Backoffice;
 import org.spring.ensapay.entity.User;
@@ -35,7 +36,7 @@ public class AgentService {
     @Autowired
     private AgentRepository agentRepository;
 
-    public String registerNewUserAgent(Agent newAgent)
+    public String registerNewUserAgent(AgentDto newAgent)
             throws MessagingException, UnsupportedEncodingException {
 
         String generatedPassword = RandomString.make(8);
@@ -64,7 +65,7 @@ public class AgentService {
     }
 
 
-    public void sendAgentEmail(Agent agent,String generatedUsername, String otpPassword)
+    public void sendAgentEmail(AgentDto agent, String generatedUsername, String otpPassword)
             throws MessagingException, UnsupportedEncodingException {
 
         MimeMessage message = mailSender.createMimeMessage();

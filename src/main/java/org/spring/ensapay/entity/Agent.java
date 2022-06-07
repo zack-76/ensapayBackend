@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 
 @Entity
@@ -15,19 +17,19 @@ public class Agent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long agentId;
-    //@Column(nullable = false)
+    //@Column(nullable = false,length = 25)
     private String agentPhone;
-    //@Column(nullable = false)
+    //@Column(nullable = false,length = 20)
     private String agentFirstName;
-    //@Column(nullable = false)
+    //@Column(nullable = false,length = 20)
     private String agentLastName;
     //@Column(nullable = false)
     private String agentAddress;
-    //@Column(nullable = false)
+    //@Column(nullable = false,length = 20)
     private String agentBirthDate;
-    //@Column(nullable = false)
+    //@Column(nullable = false,length = 20,name="agent_cin")
     private String agentCIN;
-    //@Column(nullable = false)
+    //@Column(nullable = false,length = 100)
     private String agentEmail;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
