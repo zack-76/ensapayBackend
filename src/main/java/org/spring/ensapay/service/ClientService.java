@@ -2,7 +2,6 @@ package org.spring.ensapay.service;
 
 import net.bytebuddy.utility.RandomString;
 import org.spring.ensapay.dto.ClientDto;
-import org.spring.ensapay.entity.Agent;
 import org.spring.ensapay.entity.Client;
 import org.spring.ensapay.entity.User;
 import org.spring.ensapay.repository.ClientRepository;

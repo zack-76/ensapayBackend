@@ -7,8 +7,6 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
 import java.util.Random;
 
 @Entity
@@ -17,8 +15,9 @@ import java.util.Random;
 @NoArgsConstructor
 public class Facture {
 
+
     @Id
-    private Integer refernce = new Random().nextInt(999998+1)+100000;
+    private Integer reference ;
     @Column(nullable = false)
     private String clientName;
     @Column(nullable = false)

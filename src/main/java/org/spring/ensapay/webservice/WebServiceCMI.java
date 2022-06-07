@@ -82,6 +82,7 @@ public class WebServiceCMI {
 
     public void addFacture(Long clientId,String codeCreditor,String codeDept,Integer impayé){
         Facture facture =  new Facture();
+        facture.setReference( new Random().nextInt(999998+1)+100000);
         String clientFullName = clientRepository.findClientFirstNameByClientId(clientId)+" "+clientRepository.findClientLastNameByClientId(clientId);
         facture.setClientName(clientFullName);
         String nameCreditor = creditorRepository.findCreditorNameByCodeCreditor(codeCreditor);
@@ -108,7 +109,7 @@ public class WebServiceCMI {
         String clientLastName =  clientRepository.findClientLastNameByClientId(id);
         helper.setTo(clientEmail);
 
-        String subject = "Operation success";
+        String subject = "Payment success";
         String content = "<p>Hello Client " + clientFirstName + " "+clientLastName+"</p>"
                 + "<p>Your Payment has been with succes"
                 + "<p>Note: Our EnsaPay platform give you the best and the secure services.</p>";

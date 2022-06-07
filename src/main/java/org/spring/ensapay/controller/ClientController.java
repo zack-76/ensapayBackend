@@ -36,7 +36,7 @@ public class ClientController {
 
 
     @PostMapping("/regiterNewUserClient")
-    //@PreAuthorize("hasRole('Agent')")
+    @PreAuthorize("hasRole('Agent')")
     public ResponseEntity<String> regiterNewUserClient(@Valid @RequestBody ClientDto client)
             throws MessagingException,
             UnsupportedEncodingException {
@@ -45,7 +45,7 @@ public class ClientController {
     }
 
     @PostMapping("/uploadClientIdentities")
-    //@PreAuthorize("hasRole('Agent')")
+    @PreAuthorize("hasRole('Agent')")
     public void uploadClientIdentity(@RequestParam("identity") MultipartFile[] identities) {
         try {
             List<String> fileNames = new ArrayList<>();
@@ -59,7 +59,7 @@ public class ClientController {
     }
 
     @GetMapping("/client/solde/{clientId}")
-    //@PreAuthorize("hasRole('Client')")
+    @PreAuthorize("hasRole('Client')")
     public ResponseEntity<Integer> ClientSolde(@PathVariable("clientId") Long clientId){
         return ResponseEntity.ok().body(clientService.getSolde(clientId));
     }

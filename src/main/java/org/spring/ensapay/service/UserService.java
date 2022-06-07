@@ -1,10 +1,8 @@
 package org.spring.ensapay.service;
 
-import org.spring.ensapay.entity.Backoffice;
 import org.spring.ensapay.entity.JwtRequest;
 import org.spring.ensapay.entity.JwtResponse;
 import org.spring.ensapay.entity.User;
-import org.spring.ensapay.repository.BackofficeRepository;
 import org.spring.ensapay.repository.UserRepository;
 import org.spring.ensapay.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
