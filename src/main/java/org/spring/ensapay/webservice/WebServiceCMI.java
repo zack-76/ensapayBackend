@@ -64,23 +64,23 @@ public class WebServiceCMI {
                 .map(Map.Entry::getValue).findFirst().orElse(null);
     }
 
-    public String validate(String generatedtoken, Long clientId , Integer impaye,Creditor c)
+    public String validate(Integer generatedtoken, Long clientId , Integer impaye,String codeCreditor,String codeDept)
             throws MessagingException, UnsupportedEncodingException {
 
-        if(generatedOTP == WebServiceCMI.generatedOTP){
+        if(generatedtoken == WebServiceCMI.generatedOTP){
             Integer clientSolde = clientRepository.findClientSoldeByClientId(clientId);
             if(clientSolde >= impaye){
-                clientSolde-=impaye;
-                this.sendValidateEmail(clientId);
+                clientRepository.updateClientSoldeByClientId(clientSolde-=impaye,clientId);
+                addFacture(clientId,codeCreditor,codeDept,impaye);
+                sendValidateEmail(clientId);
                 return "success";
             }else
-                return "can't pursuite your operation your solde is lower the facture's impaye";
+                return "can't pursuite your operation your solde is lower the facture's debt";
         }
-        return null;
+        return "Something went wrong";
     }
 
-
-    public String addFacture(Facture newfacture , Long clientId,String codeCreditor,String codeDept,Integer impayé){
+    public void addFacture(Long clientId,String codeCreditor,String codeDept,Integer impayé){
         Facture facture =  new Facture();
         String clientFullName = clientRepository.findClientFirstNameByClientId(clientId)+" "+clientRepository.findClientLastNameByClientId(clientId);
         facture.setClientName(clientFullName);
@@ -90,7 +90,6 @@ public class WebServiceCMI {
         facture.setDebtName(nameDebt);
         facture.setImpaye(impayé);
         factureRepository.save(facture);
-        return "facture added successfully";
     }
 
     public List<Facture> getFactures(){
