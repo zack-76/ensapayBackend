@@ -1,21 +1,50 @@
 package org.spring.ensapay.webservice;
 
 import org.spring.ensapay.entity.Creditor;
+import org.spring.ensapay.entity.Facture;
+import org.spring.ensapay.repository.ClientRepository;
 import org.spring.ensapay.repository.CreditorRepository;
+import org.spring.ensapay.repository.DebtRepository;
+import org.spring.ensapay.repository.FactureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 public class WebServiceCMI {
 
+    private static final Integer generatedOTP = new Random().nextInt(999998 + 1)  + 100000;
+
     @Autowired
     private CreditorRepository creditorRepository;
 
-    public List getAllCreditor(){
+    @Autowired
+    private DebtRepository debtRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private FactureRepository factureRepository;
+
+
+    public Integer sendGeneratedOTP() {
+       return WebServiceCMI.generatedOTP  ;
+    }
+
+    public List<Creditor> getAllCreditor(){
 
         List<Creditor> creditors =  creditorRepository.findAll();
 
@@ -33,6 +62,62 @@ public class WebServiceCMI {
 
         return impays.entrySet().stream().filter(i -> reference.equals(i.getKey()))
                 .map(Map.Entry::getValue).findFirst().orElse(null);
+    }
 
+    public String validate(String generatedtoken, Long clientId , Integer impaye,Creditor c)
+            throws MessagingException, UnsupportedEncodingException {
+
+        if(generatedOTP == WebServiceCMI.generatedOTP){
+            Integer clientSolde = clientRepository.findClientSoldeByClientId(clientId);
+            if(clientSolde >= impaye){
+                clientSolde-=impaye;
+                this.sendValidateEmail(clientId);
+                return "success";
+            }else
+                return "can't pursuite your operation your solde is lower the facture's impaye";
+        }
+        return null;
+    }
+
+
+    public String addFacture(Facture newfacture , Long clientId,String codeCreditor,String codeDept,Integer impayé){
+        Facture facture =  new Facture();
+        String clientFullName = clientRepository.findClientFirstNameByClientId(clientId)+" "+clientRepository.findClientLastNameByClientId(clientId);
+        facture.setClientName(clientFullName);
+        String nameCreditor = creditorRepository.findCreditorNameByCodeCreditor(codeCreditor);
+        facture.setCreditorName(nameCreditor);
+        String nameDebt = debtRepository.findDebtNameByCodeDebt(codeDept);
+        facture.setDebtName(nameDebt);
+        facture.setImpaye(impayé);
+        factureRepository.save(facture);
+        return "facture added successfully";
+    }
+
+    public List<Facture> getFactures(){
+        return factureRepository.findAll();
+    }
+
+    public void sendValidateEmail(Long id)
+            throws MessagingException, UnsupportedEncodingException {
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message,true);
+
+        helper.setFrom("ensapay_2022@outlook.com");
+        String clientEmail =  clientRepository.findClientEmailByClientId(id);
+        String clientFirstName = clientRepository.findClientFirstNameByClientId(id);
+        String clientLastName =  clientRepository.findClientLastNameByClientId(id);
+        helper.setTo(clientEmail);
+
+        String subject = "Operation success";
+        String content = "<p>Hello Client " + clientFirstName + " "+clientLastName+"</p>"
+                + "<p>Your Payment has been with succes"
+                + "<p>Note: Our EnsaPay platform give you the best and the secure services.</p>";
+
+        helper.setSubject(subject);
+
+        helper.setText(content,true );
+
+        mailSender.send(message);
     }
 }

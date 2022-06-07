@@ -37,4 +37,5 @@ public class Client {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     User clientUser;
+
 }

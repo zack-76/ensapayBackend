@@ -16,9 +16,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     @PostMapping("/authenticate")
-    public JwtResponse createJwtToken(@RequestBody JwtRequest jwtRequest) throws Exception {
+    public JwtResponse createJwtToken(@RequestBody @Valid JwtRequest jwtRequest) throws Exception {
         return userService.createJwtToken(jwtRequest);
     }
 
