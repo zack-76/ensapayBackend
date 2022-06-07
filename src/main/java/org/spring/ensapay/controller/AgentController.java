@@ -37,10 +37,9 @@ public class AgentController {
     @PreAuthorize("hasRole('BackOffice')")
     public ResponseEntity<String> regiterNewUserAgent(@RequestBody @Valid AgentDto agent) throws MessagingException,
             UnsupportedEncodingException {
+        log.info("Agent"+agent.getAgentFirstName()+" "+agent.getAgentLastName() +"successfully added");
         return ResponseEntity.status(HttpStatus.OK).body(agentService.registerNewUserAgent(agent));
-
     }
-
 
     @PostMapping("/uploadAgentIdentities")
     @PreAuthorize("hasRole('Backoffice')")
@@ -55,7 +54,6 @@ public class AgentController {
             log.warn("could't not store identites",e);
         }
     }
-
 
     @GetMapping("/forAgent")
     @PreAuthorize("hasRole('Agent')")

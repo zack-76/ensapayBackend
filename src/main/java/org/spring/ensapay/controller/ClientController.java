@@ -40,7 +40,7 @@ public class ClientController {
     public ResponseEntity<String> regiterNewUserClient(@Valid @RequestBody ClientDto client)
             throws MessagingException,
             UnsupportedEncodingException {
-
+        log.info("Client"+client.getClientFirstName()+" "+client.getClientLastName()+ "added successfully ");
         return ResponseEntity.status(HttpStatus.OK).body(clientService.registerNewUserClient(client));
     }
 
@@ -52,6 +52,7 @@ public class ClientController {
             Arrays.asList(identities).stream().forEach(file -> {
                 clientService.save(file);
                 fileNames.add(file.getOriginalFilename());
+                log.info("Agent Identities has successfully stored");
             });
         } catch (Exception e) {
             log.warn("could't not store identites",e);
@@ -61,8 +62,7 @@ public class ClientController {
     @GetMapping("/client/solde/{clientId}")
     @PreAuthorize("hasRole('Client')")
     public ResponseEntity<Integer> ClientSolde(@PathVariable("clientId") Long clientId){
+        log.info("client"+clientId+" has got he's Solde");
         return ResponseEntity.ok().body(clientService.getSolde(clientId));
     }
-
-
 }

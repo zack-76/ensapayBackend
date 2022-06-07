@@ -67,5 +67,4 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         return "/authenticate".equals(path);
     }
-
 }
