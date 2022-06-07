@@ -1,6 +1,7 @@
 package org.spring.ensapay.controller;
 
 import org.spring.ensapay.entity.Creditor;
+import org.spring.ensapay.entity.Facture;
 import org.spring.ensapay.webservice.WebServiceCMI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,11 @@ public class WebServiceController {
                                                   @RequestParam("codeDept")String codeDept)
             throws MessagingException, UnsupportedEncodingException {
         return ResponseEntity.status(200).body(webServiceCMI.validate(generatedToken,clientId,impaye,codeCreditor,codeDept));
+    }
+
+    @GetMapping("/factures")
+    public List<Facture> getAllFactures(){
+        return webServiceCMI.getFactures();
     }
 
 
