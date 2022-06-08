@@ -7,7 +7,6 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.Random;
 
 @Entity
 @Setter
@@ -26,4 +25,5 @@ public class Facture {
     private String DebtName;
     @Column(nullable = false)
     private Integer impaye;
+
 }

@@ -37,7 +37,7 @@ public class ClientController {
 
     @PostMapping("/regiterNewUserClient")
     @PreAuthorize("hasRole('Agent')")
-    public ResponseEntity<String> regiterNewUserClient(@Valid @RequestBody ClientDto client)
+    public ResponseEntity<String> regiterNewUserClient( @RequestBody @Valid ClientDto client)
             throws MessagingException,
             UnsupportedEncodingException {
         log.info("Client"+client.getClientFirstName()+" "+client.getClientLastName()+ "added successfully ");

@@ -1,5 +1,6 @@
 package org.spring.ensapay.webservice;
 
+import org.spring.ensapay.dto.ValidatePaymentDto;
 import org.spring.ensapay.entity.Creditor;
 import org.spring.ensapay.entity.Facture;
 import org.spring.ensapay.repository.ClientRepository;
@@ -44,12 +45,6 @@ public class WebServiceCMI {
        return WebServiceCMI.generatedOTP  ;
     }
 
-    public List<Creditor> getAllCreditor(){
-
-        List<Creditor> creditors =  creditorRepository.findAll();
-
-        return creditors;
-    }
 
     public Integer getImpay(String reference){
 
@@ -64,15 +59,17 @@ public class WebServiceCMI {
                 .map(Map.Entry::getValue).findFirst().orElse(null);
     }
 
-    public String validate(Integer generatedtoken, Long clientId , Integer impaye,String codeCreditor,String codeDept)
+    public String validate( ValidatePaymentDto validatePaymentDto)
             throws MessagingException, UnsupportedEncodingException {
 
-        if(generatedtoken == WebServiceCMI.generatedOTP){
-            Integer clientSolde = clientRepository.findClientSoldeByClientId(clientId);
-            if(clientSolde >= impaye){
-                clientRepository.updateClientSoldeByClientId(clientSolde-=impaye,clientId);
-                addFacture(clientId,codeCreditor,codeDept,impaye);
-                sendValidateEmail(clientId);
+        if(validatePaymentDto.getGeneratedToken() == WebServiceCMI.generatedOTP){
+            Integer clientSolde = clientRepository.findClientSoldeByClientId(validatePaymentDto.getClientId());
+            if(clientSolde >= validatePaymentDto.getImpaye()){
+                clientRepository.updateClientSoldeByClientId(clientSolde-=validatePaymentDto.getImpaye(),validatePaymentDto.getClientId());
+                addFacture(validatePaymentDto.getClientId(),
+                        validatePaymentDto.getCodeCreditor(),
+                        validatePaymentDto.getCodeDept(),validatePaymentDto.getImpaye());
+                sendValidateEmail(validatePaymentDto.getClientId());
                 return "success";
             }else
                 return "can't pursuite your operation your solde is lower the facture's debt";
@@ -119,5 +116,9 @@ public class WebServiceCMI {
         helper.setText(content,true );
 
         mailSender.send(message);
+    }
+
+    public List<Facture> getFacutreByClientName(String clientName){
+        return factureRepository.findByClientName(clientName);
     }
 }

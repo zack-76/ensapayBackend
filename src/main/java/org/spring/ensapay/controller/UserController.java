@@ -26,9 +26,9 @@ public class UserController {
 
     @PutMapping("/resetpassword/{username}")
     @PreAuthorize("hasAnyRole('Agent','Client')")
-    public String resetPassword(@PathVariable("username") String username,@Valid @RequestBody String userPassword){
+    public String resetPassword(@PathVariable("username") String username,@Valid @RequestBody User user){
         log.info("User "+username+" has reset he's Password");
-        return userService.resetPassword(userPassword,username);
+        return userService.resetPassword(user.getUserPassword(),username);
     }
 
 

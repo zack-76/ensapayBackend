@@ -1,6 +1,7 @@
 package org.spring.ensapay.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.spring.ensapay.dto.ValidatePaymentDto;
 import org.spring.ensapay.entity.Creditor;
 import org.spring.ensapay.entity.Facture;
 import org.spring.ensapay.webservice.WebServiceCMI;
@@ -21,14 +22,10 @@ public class WebServiceController {
     @Autowired
     private WebServiceCMI webServiceCMI;
 
-    @GetMapping("/Creditors")
-    public ResponseEntity<List<Creditor>> getCreditors(){
-        return ResponseEntity.status(200).body(webServiceCMI.getAllCreditor());
-    }
 
     @PostMapping("/getImpay")
     @PreAuthorize("hasRole('Client')")
-    public ResponseEntity<Integer> getImpay(@RequestParam("reference") String ref){
+    public ResponseEntity<Integer> getImpay(@RequestBody String ref){
         log.info("Impay pased to: "+ref);
         return ResponseEntity.ok().body(webServiceCMI.getImpay(ref));
     }
@@ -42,18 +39,14 @@ public class WebServiceController {
 
     @PostMapping("/validatePayment")
     @PreAuthorize("hasRole('Client')")
-    public ResponseEntity<String> validatePayment(@RequestParam("generatedToken") Integer generatedToken,
-                                                  @RequestParam("clientId")Long clientId,
-                                                  @RequestParam("impaye")Integer impaye,
-                                                  @RequestParam("codeCreditor")String codeCreditor,
-                                                  @RequestParam("codeDept")String codeDept)
+    public ResponseEntity<String> validatePayment(@RequestBody ValidatePaymentDto validatePaymentDto)
             throws MessagingException, UnsupportedEncodingException {
             log.info("Payment validated");
-            return ResponseEntity.status(200).body(webServiceCMI.validate(generatedToken,clientId,impaye,codeCreditor,codeDept));
+            return ResponseEntity.status(200).body(webServiceCMI.validate(validatePaymentDto));
     }
 
-    @GetMapping("/factures")
-    public List<Facture> getAllFactures(){
-        return webServiceCMI.getFactures();
+    @GetMapping("/factures/{clientName}")
+    public ResponseEntity<List<Facture>> getAllFactures(@PathVariable("clientName") String clientName){
+        return ResponseEntity.status(200).body(webServiceCMI.getFacutreByClientName(clientName));
     }
 }

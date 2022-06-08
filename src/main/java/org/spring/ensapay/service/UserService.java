@@ -85,11 +85,10 @@ public class UserService implements UserDetailsService {
 
 
 
-    public String resetPassword(String userPassword , String email) {
+    public String resetPassword(String userPassword , String username) {
         String newEncodedPassword = passwordEncoder.encode(userPassword);
-        userRepository.updateUserPasswordByUserName(newEncodedPassword , email);
+        userRepository.updateUserPasswordByUserName(newEncodedPassword , username);
         return "Password reset ...";
     }
-
 
 }
