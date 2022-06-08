@@ -37,16 +37,16 @@ public class ClientController {
 
     @PostMapping("/regiterNewUserClient")
     @PreAuthorize("hasRole('Agent')")
-    public ResponseEntity<String> regiterNewUserClient( @RequestBody @Valid ClientDto client)
-            throws MessagingException,
-            UnsupportedEncodingException {
-        log.info("Client"+client.getClientFirstName()+" "+client.getClientLastName()+ "added successfully ");
-        return ResponseEntity.status(HttpStatus.OK).body(clientService.registerNewUserClient(client));
-    }
-
-    @PostMapping("/uploadClientIdentities")
-    @PreAuthorize("hasRole('Agent')")
-    public void uploadClientIdentity(@RequestParam("identity") MultipartFile[] identities) {
+    public ResponseEntity<String> regiterNewUserClient(@RequestParam("identity") MultipartFile[] identities,
+                                                       @RequestParam("clientFirstName") String clientFirstName,
+                                                       @RequestParam("clientLastName") String clientLastName,
+                                                       @RequestParam("clientPhone") String clientPhone,
+                                                       @RequestParam("clientAddress") String clientAddress,
+                                                       @RequestParam("clientBirthDate") String clientBirthDate,
+                                                       @RequestParam("clientCIN") String clientCIN,
+                                                       @RequestParam("clientSolde") Integer clientSolde,
+                                                       @RequestParam("clientEmail") String clientEmail) throws MessagingException, UnsupportedEncodingException {
+       @Valid ClientDto clientDto = new ClientDto(clientFirstName,clientLastName,clientPhone,clientAddress,clientBirthDate,clientCIN,clientSolde,clientEmail);
         try {
             List<String> fileNames = new ArrayList<>();
             Arrays.asList(identities).stream().forEach(file -> {
@@ -57,6 +57,8 @@ public class ClientController {
         } catch (Exception e) {
             log.warn("could't not store identites",e);
         }
+        log.info("Client"+clientDto.getClientFirstName()+" "+clientDto.getClientLastName()+ "added successfully ");
+        return ResponseEntity.status(HttpStatus.OK).body(clientService.registerNewUserClient(clientDto));
     }
 
     @GetMapping("/client/solde/{clientId}")

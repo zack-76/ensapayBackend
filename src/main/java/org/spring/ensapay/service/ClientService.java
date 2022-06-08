@@ -28,7 +28,7 @@ public class ClientService {
     private final Path root = Paths.get("src\\main\\resources\\identities\\clients");
 
     @Autowired
-    private JavaMailSender mailSender = new JavaMailSenderImpl();
+    private final JavaMailSender mailSender = new JavaMailSenderImpl();
 
     @Autowired
     PasswordEncoder passwordEncoder;
