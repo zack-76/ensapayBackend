@@ -27,7 +27,6 @@ public class AgentService {
 
     private final Path root = Paths.get("src\\main\\resources\\identities\\agents");
 
-    @Autowired
     private JavaMailSender mailSender;
 
     @Autowired
@@ -121,4 +120,11 @@ public class AgentService {
             throw new RuntimeException("Could not store the identities. Error: " + e.getMessage());
         }
     }
+
+    public Agent getAgentProfile(String username) {
+        return this.agentRepository.findAgentByIdentifiant(username);
+    }
+
+
+
 }

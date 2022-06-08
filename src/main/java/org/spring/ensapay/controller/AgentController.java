@@ -65,4 +65,9 @@ public class AgentController {
         return "just Agent";
     }
 
+    @GetMapping("/profileAgent/{username}")
+    public @ResponseBody  Agent  getAgent(@PathVariable(value  = "username") String username) {
+        return this.agentService.getAgentProfile(username);
+    }
+
 }

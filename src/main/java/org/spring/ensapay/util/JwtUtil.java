@@ -6,17 +6,16 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
 
     private static final String SECRET_KEY = "zakaria_yessine_ashraf_GI4";
 
-    private static final int TOKEN_VALIDITY = 3600 * 5*24;
+    private static final int TOKEN_VALIDITY = 3600 * 5 * 24;
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -49,12 +48,14 @@ public class JwtUtil {
 
         Map<String, Object> claims = new HashMap<>();
 
+        Claims claims1 = Jwts.claims().setSubject(userDetails.getUsername());
+        claims1.put("role", userDetails.getAuthorities().stream().map((element) -> element.getAuthority()).collect(Collectors.toList()));
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userDetails.getUsername())
+                .setClaims(claims1)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
     }
+
 }

@@ -87,10 +87,10 @@ public class UserService implements UserDetailsService {
 
 
 
-    public String resetPassword(String userPassword , String email) {
-        String newEncodedPassword = passwordEncoder.encode(userPassword);
-        userRepository.updateUserPasswordByUserName(newEncodedPassword , email);
-        return "Password reset ...";
+    public void resetPassword(String userPassword , String email) {
+        User user=this.userRepository.findUserByUsername(email);
+        user.setUserPassword(passwordEncoder.encode(userPassword));
+            this.userRepository.save(user);
     }
 
 

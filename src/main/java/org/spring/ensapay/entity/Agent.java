@@ -33,6 +33,6 @@ public class Agent {
     private String agentEmail;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     User agentUser;
 }
