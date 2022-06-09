@@ -26,6 +26,9 @@ public class User {
     //@NotBlank(message = "Role is required ")
     private String roleName;
 
+
+
+
     @OneToOne(mappedBy = "agentUser",cascade = CascadeType.ALL)
     private Agent agent;
 

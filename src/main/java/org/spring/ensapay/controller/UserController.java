@@ -6,6 +6,7 @@ import org.spring.ensapay.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,18 @@ public class UserController {
       }catch(Exception e){
           return ResponseEntity.status(400).body("cannot modify passwor ");
       }
+    }
+    @PutMapping("/changePassword/{username}")
+    //@PreAuthorize("hasAnyRole('Agent','Client')")
+    public ResponseEntity<String> ChangePassword(@PathVariable("username") String username, @Valid @RequestBody Password password){
+        try {
+            System.out.println(password.getPassword()+"  "+password.getConfirmPassword()+"  "+username);
+
+            userService.ChangePassword(password.getPassword(),password.getConfirmPassword(), username);
+            return ResponseEntity.ok().body("Password changed");
+        }catch(Exception e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
 
 

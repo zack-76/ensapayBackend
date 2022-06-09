@@ -46,20 +46,27 @@ public class ClientService {
         Client client = new Client();
         client.setClientFirstName(newClient.getClientFirstName());
         client.setClientLastName(newClient.getClientLastName());
-        client.setClientCIN(newClient.getClientCIN());
-        client.setClientBirthDate(newClient.getClientBirthDate());
+        //client.setClientCIN(newClient.getClientCIN());
+        //client.setClientBirthDate(newClient.getClientBirthDate());
         client.setClientEmail(newClient.getClientEmail());
-        client.setClientSolde(newClient.getClientSolde());
+        //client.setClientSolde(newClient.getClientSolde());
+        client.setClientCountry(newClient.getClientCountry());
         client.setClientAddress(newClient.getClientAddress());
+        client.setClientCity(newClient.getClientCity());
+        client.setClientZip(newClient.getClientZip());
+        client.setClientUsername(newClient.getClientUsername());
+        client.setFirstConnection(true);
         User clientUser =  new User();
         clientUser.setRoleName("Client");
-        clientUser.setUsername(newClient.getClientPhone());
+        clientUser.setUsername(newClient.getClientUsername());
+
+
         clientUser.setUserPassword(encodedPassword);
         client.setClientUser(clientUser);
 
         clientRepository.save(client);
 
-        sendClientEmail(newClient,generatedPassword);
+        //sendClientEmail(newClient,generatedPassword);
 
         return "Client successfully added" ;
     }
@@ -80,7 +87,7 @@ public class ClientService {
         String content = "<p>Hello Client " + client.getClientFirstName() + " "+client.getClientLastName()+"</p>"
                 + "<p>For security reason, you're required to use the following "
                 + "Username to login:</p>"
-                + "<p><b>" + client.getClientPhone() + "</b></p>"
+                + "<p><b>" + client.getClientUsername() + "</b></p>"
                 + "One Time Password to login:</p>"
                 + "<p><b>" + otpPassword + "</b></p>"
                 + "<br>"
@@ -97,7 +104,7 @@ public class ClientService {
 
     public void initClient() {
 
-        Client client = new Client();
+      /*  Client client = new Client();
         client.setClientFirstName("yessine");
         client.setClientLastName("Jaoua");
         client.setClientAddress("Tunis");
@@ -113,7 +120,7 @@ public class ClientService {
         client.setClientUser(clientUser);
 
         clientRepository.save(client);
-
+*/
     }
 
 

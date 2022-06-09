@@ -4,6 +4,7 @@ import org.spring.ensapay.entity.Backoffice;
 import org.spring.ensapay.entity.JwtRequest;
 import org.spring.ensapay.entity.JwtResponse;
 import org.spring.ensapay.entity.User;
+import org.spring.ensapay.repository.AgentRepository;
 import org.spring.ensapay.repository.BackofficeRepository;
 import org.spring.ensapay.repository.UserRepository;
 import org.spring.ensapay.util.JwtUtil;
@@ -28,7 +29,8 @@ import java.util.Collection;
 @Service
 public class UserService implements UserDetailsService {
 
-
+   @Autowired
+   private AgentRepository agentRepository;
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -86,11 +88,37 @@ public class UserService implements UserDetailsService {
     }
 
 
-
-    public void resetPassword(String userPassword , String email) {
-        User user=this.userRepository.findUserByUsername(email);
+    public void resetPassword(String userPassword , String username) {
+        User user=this.userRepository.findUserByUsername(username);
         user.setUserPassword(passwordEncoder.encode(userPassword));
+        if(user.getRoleName().equals("Agent")){
+            this.agentRepository.UpdateFirstConnectionAgentByid(username);
+
+        }
+        else if(user.getRoleName().equals("Client")){
+
+        }
             this.userRepository.save(user);
+    }
+
+
+    public void ChangePassword(String Password,String ConfirmPassword,String username)throws  Exception{
+        if(Password=="" || ConfirmPassword=="" || username=="" ){
+            throw  new RuntimeException("u should field all inputs");
+        }
+        else {
+            User user = this.userRepository.findUserByUsername(username);
+            System.out.println(Password+"nhnnnn");
+            System.out.println(user.getUserPassword());
+            System.out.println(passwordEncoder.encode(Password));
+           /* if ((user.getUserPassword()).equals(passwordEncoder.encode("1"))) {
+                user.setUserPassword(ConfirmPassword);
+                this.userRepository.save(user);
+            }
+            else{throw  new RuntimeException("Password incorrect");}
+
+            */
+        }
     }
 
 

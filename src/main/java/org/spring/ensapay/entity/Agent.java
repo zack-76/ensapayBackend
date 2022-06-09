@@ -32,6 +32,9 @@ public class Agent {
     //@Column(nullable = false,length = 100)
     private String agentEmail;
 
+    private boolean firstConnection;
+
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     User agentUser;

@@ -50,9 +50,11 @@ public class AgentService {
         agent.setAgentEmail(newAgent.getAgentEmail());
         agent.setAgentBirthDate(newAgent.getAgentBirthDate());
         agent.setAgentPhone(newAgent.getAgentPhone());
+        agent.setFirstConnection(true);
         User agentUser =  new User();
         agentUser.setRoleName("Agent");
         agentUser.setUsername(generatedUsername);
+
         agentUser.setUserPassword(passwordEncoder.encode(encodedPassword));
         agent.setAgentUser(agentUser);
 
@@ -101,11 +103,13 @@ public class AgentService {
         agent.setAgentCIN("BG7865");
         agent.setAgentBirthDate("16-10-1999");
         agent.setAgentEmail("zessabri80@gmail.com");
+        agent.setFirstConnection(true);
         User agentUser = new User();
         agentUser.setUsername("agent1");
         agentUser.setUserPassword(passwordEncoder.encode("1234"));
         agentUser.setRoleName("Agent");
         agent.setAgentUser(agentUser);
+
 
 
         agentRepository.save(agent);
@@ -122,7 +126,9 @@ public class AgentService {
     }
 
     public Agent getAgentProfile(String username) {
-        return this.agentRepository.findAgentByIdentifiant(username);
+
+            return   this.agentRepository.findAgentByIdentifiant(username);
+
     }
 
 

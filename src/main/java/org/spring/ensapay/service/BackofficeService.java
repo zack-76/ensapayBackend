@@ -33,6 +33,7 @@ public class BackofficeService {
         User backOfficeUser = new User();
         backOfficeUser.setUsername("backoffice1");
         backOfficeUser.setUserPassword(passwordEncoder.encode("1234"));
+
         backOfficeUser.setRoleName("Backoffice");
         backOffice.setBackofficeUser(backOfficeUser);
 

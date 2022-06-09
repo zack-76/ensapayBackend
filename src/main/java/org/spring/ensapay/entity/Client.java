@@ -23,17 +23,22 @@ public class Client {
     //@Column(nullable = false,length = 25)
     private String clientLastName;
     //@Column(nullable = false,length = 25)
-    private String clientPhone;
+    //private String clientPhone;
     //@Column(nullable = false)
     private String clientAddress;
     //@Column(nullable = false,length = 20)
-    private String clientBirthDate;
+    private String ClientUsername;
     //@Column(nullable = false,length = 10,name="client_cin")
-    private String clientCIN;
+
     //@Column(nullable = false)
-    private Integer clientSolde;
+    //private Integer clientSolde;
    // @Column(nullable = false,length=100)
     private String clientEmail;
+    private String ClientCity;
+    private String ClientZip;
+    private String ClientCountry;
+
+    private boolean firstConnection;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     User clientUser;

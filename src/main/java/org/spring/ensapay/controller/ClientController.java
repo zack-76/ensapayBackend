@@ -32,30 +32,35 @@ public class ClientController {
     private UserService userService;
 
     @PostConstruct
-    public void initAgent(){clientService.initClient();}
+    public void initClient(){clientService.initClient();}
+
+
 
 
     @PostMapping("/regiterNewUserClient")
     //@PreAuthorize("hasRole('Agent')")
-    public ResponseEntity<String> regiterNewUserClient(@Valid @RequestBody ClientDto client)
-            throws MessagingException,
-            UnsupportedEncodingException {
-
-        return ResponseEntity.status(HttpStatus.OK).body(clientService.registerNewUserClient(client));
-    }
-
-    @PostMapping("/uploadClientIdentities")
-    //@PreAuthorize("hasRole('Agent')")
-    public void uploadClientIdentity(@RequestParam("identity") MultipartFile[] identities) {
+    public ResponseEntity<String> uploadClientIdentity(@RequestParam(name = "file") MultipartFile[] identities,
+    @RequestParam(name = "Company" ) String Company,
+    @RequestParam(name = "Username") String Username,
+    @RequestParam(name = "email") String email,
+    @RequestParam(name = "FirstName") String FirstName,
+    @RequestParam(name = "LastName") String LastName,
+     @RequestParam(name = "Address") String Address,
+     @RequestParam(name = "City") String City,
+     @RequestParam(name = "Zip") String Zip,
+     @RequestParam(name = "Country") String Country)throws MessagingException,
+            UnsupportedEncodingException  {
+        ClientDto clientDto=new ClientDto(FirstName,LastName,Address,email,Username,City,Zip,Country);
         try {
-            List<String> fileNames = new ArrayList<>();
             Arrays.asList(identities).stream().forEach(file -> {
                 clientService.save(file);
-                fileNames.add(file.getOriginalFilename());
+
             });
         } catch (Exception e) {
             log.warn("could't not store identites",e);
         }
+        clientService.registerNewUserClient(clientDto);
+        return ResponseEntity.status(HttpStatus.OK).body("client added");
     }
 
     @GetMapping("/client/solde/{clientId}")
