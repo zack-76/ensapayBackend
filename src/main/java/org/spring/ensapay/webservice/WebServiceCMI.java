@@ -3,14 +3,13 @@ package org.spring.ensapay.webservice;
 import org.spring.ensapay.dto.ValidatePaymentDto;
 import org.spring.ensapay.entity.Creditor;
 import org.spring.ensapay.entity.Facture;
-import org.spring.ensapay.repository.ClientRepository;
-import org.spring.ensapay.repository.CreditorRepository;
-import org.spring.ensapay.repository.DebtRepository;
-import org.spring.ensapay.repository.FactureRepository;
+import org.spring.ensapay.entity.ValidatePayment;
+import org.spring.ensapay.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -21,9 +20,16 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
+@Transactional
 public class WebServiceCMI {
 
-    private static final Integer generatedOTP = new Random().nextInt(999998 + 1)  + 100000;
+    //private static final Integer generatedOTP = new Random().nextInt(999998 + 1)  + 100000;
+
+    @Autowired
+    private ValidatePaymentRepository validatePaymentRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private CreditorRepository creditorRepository;
@@ -41,12 +47,17 @@ public class WebServiceCMI {
     private FactureRepository factureRepository;
 
 
-    public Integer sendGeneratedOTP() {
-       return WebServiceCMI.generatedOTP  ;
+    public Integer sendValidatetoken(String username) {
+        ValidatePayment validatePayment = validatePaymentRepository.findById(username).get();
+        return validatePayment.getToken();
     }
 
+    public Integer getImpay(String reference,String username){
 
-    public Integer getImpay(String reference){
+        ValidatePayment validatePayment =  new ValidatePayment();
+        validatePayment.setUsername(username);
+        validatePayment.setToken(new Random().nextInt(999998 + 1)  + 100000);
+        validatePaymentRepository.save(validatePayment);
 
         Map<String,Integer> impays = new HashMap<>();
         impays.put("12ABT5670K",300);
@@ -59,10 +70,13 @@ public class WebServiceCMI {
                 .map(Map.Entry::getValue).findFirst().orElse(null);
     }
 
-    public String validate( ValidatePaymentDto validatePaymentDto)
+    public String validate( ValidatePaymentDto validatePaymentDto,String username)
             throws MessagingException, UnsupportedEncodingException {
 
-        if(validatePaymentDto.getGeneratedToken() == WebServiceCMI.generatedOTP){
+        ValidatePayment validatePayment = validatePaymentRepository.findById(username).get();
+
+        if(validatePaymentDto.getGeneratedToken() == validatePayment.getToken()){
+            validatePaymentRepository.deleteById(username);
             Integer clientSolde = clientRepository.findClientSoldeByClientId(validatePaymentDto.getClientId());
             if(clientSolde >= validatePaymentDto.getImpaye()){
                 clientRepository.updateClientSoldeByClientId(clientSolde-=validatePaymentDto.getImpaye(),validatePaymentDto.getClientId());
@@ -74,8 +88,9 @@ public class WebServiceCMI {
             }else
                 return "can't pursuite your operation your solde is lower the facture's debt";
         }
-        return "Something went wrong";
+        return "Something went wrong!";
     }
+
 
     public void addFacture(Long clientId,String codeCreditor,String codeDept,Integer impayé){
         Facture facture =  new Facture();
@@ -90,9 +105,11 @@ public class WebServiceCMI {
         factureRepository.save(facture);
     }
 
+
     public List<Facture> getFactures(){
         return factureRepository.findAll();
     }
+
 
     public void sendValidateEmail(Long id)
             throws MessagingException, UnsupportedEncodingException {

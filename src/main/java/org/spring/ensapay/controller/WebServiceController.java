@@ -23,26 +23,26 @@ public class WebServiceController {
     private WebServiceCMI webServiceCMI;
 
 
-    @PostMapping("/getImpay")
+    @PostMapping("/getImpay/{username}/{reference}")
     @PreAuthorize("hasRole('Client')")
-    public ResponseEntity<Integer> getImpay(@RequestBody String ref){
-        log.info("Impay pased to: "+ref);
-        return ResponseEntity.ok().body(webServiceCMI.getImpay(ref));
+    public ResponseEntity<Integer> getImpay(@PathVariable("reference") String reference,@PathVariable("username") String username){
+        log.info("Impay pased to: "+reference);
+        return ResponseEntity.ok().body(webServiceCMI.getImpay(reference,username));
     }
 
-    @GetMapping("/validateToken")
+    @GetMapping("/validateToken/{username}")
     @PreAuthorize("hasRole('Client')")
-    public ResponseEntity<Integer> getValidateToken(){
-        log.info("Validate Token passed to the Client ");
-        return  ResponseEntity.ok().body(webServiceCMI.sendGeneratedOTP());
+    public ResponseEntity<Integer> getValidateToken(@PathVariable("username") String username){
+        log.info("Validate Token passed to the Client "+username);
+        return  ResponseEntity.ok().body(webServiceCMI.sendValidatetoken(username));
     }
 
-    @PostMapping("/validatePayment")
+    @PostMapping("/validatePayment/{username}")
     @PreAuthorize("hasRole('Client')")
-    public ResponseEntity<String> validatePayment(@RequestBody ValidatePaymentDto validatePaymentDto)
+    public ResponseEntity<String> validatePayment(@RequestBody ValidatePaymentDto validatePaymentDto,@PathVariable("username") String username)
             throws MessagingException, UnsupportedEncodingException {
             log.info("Payment validated");
-            return ResponseEntity.status(200).body(webServiceCMI.validate(validatePaymentDto));
+            return ResponseEntity.status(200).body(webServiceCMI.validate(validatePaymentDto,username));
     }
 
     @GetMapping("/factures/{clientName}")
