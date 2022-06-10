@@ -30,7 +30,7 @@ public class ClientService {
 
 
     @Autowired(required = true)
-    private  JavaMailSender mailSender;
+    private JavaMailSender mailSender;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -40,7 +40,7 @@ public class ClientService {
     private ClientRepository clientRepository;
 
     public String registerNewUserClient(ClientDto newClient)
-            throws MessagingException, UnsupportedEncodingException{
+            throws MessagingException, UnsupportedEncodingException {
 
         String generatedPassword = RandomString.make(8);
         String encodedPassword = passwordEncoder.encode(generatedPassword);
@@ -58,7 +58,7 @@ public class ClientService {
         client.setClientZip(newClient.getClientZip());
         client.setClientUsername(newClient.getClientUsername());
         client.setFirstConnection(true);
-        User clientUser =  new User();
+        User clientUser = new User();
         clientUser.setRoleName("Client");
         clientUser.setUsername(newClient.getClientUsername());
 
@@ -70,15 +70,14 @@ public class ClientService {
 
         //sendClientEmail(newClient,generatedPassword);
 
-        return "Client successfully added" ;
+        return "Client successfully added";
     }
 
 
-
-    public void sendClientEmail(ClientDto client , String otpPassword )
+    public void sendClientEmail(ClientDto client, String otpPassword)
             throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message,true);
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setFrom("ensapay_2022@outlook.com");
         helper.setTo(client.getClientEmail());
@@ -86,7 +85,7 @@ public class ClientService {
         String subject = "Here's your Credentials";
 
 
-        String content = "<p>Hello Client " + client.getClientFirstName() + " "+client.getClientLastName()+"</p>"
+        String content = "<p>Hello Client " + client.getClientFirstName() + " " + client.getClientLastName() + "</p>"
                 + "<p>For security reason, you're required to use the following "
                 + "Username to login:</p>"
                 + "<p><b>" + client.getClientUsername() + "</b></p>"
@@ -101,7 +100,6 @@ public class ClientService {
 
         mailSender.send(message);
     }
-
 
 
     public void initClient() {
@@ -140,9 +138,7 @@ public class ClientService {
     }
 
     public Client getClientProfile(String username) {
-
-        return   this.clientRepository.findClientByIdentifiant(username);
-
+        return this.clientRepository.findClientByIdentifiant(username);
     }
 
 }

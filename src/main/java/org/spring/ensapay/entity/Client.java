@@ -22,16 +22,16 @@ public class Client {
     private String clientFirstName;
     @Column(nullable = false,length = 25)
     private String clientLastName;
-    //@Column(nullable = false,length = 25)
-    //private String clientPhone;
-    //@Column(nullable = false)
+    @Column(nullable = false,length = 10)
+    private String clientPhone;
+    @Column(nullable = false)
     private String clientAddress;
     //@Column(nullable = false,length = 20)
     private String ClientUsername;
     //@Column(nullable = false,length = 10,name="client_cin")
 
-    //@Column(nullable = false)
-    //private Integer clientSolde;
+    @Column(nullable = false)
+    private Integer clientSolde;
    // @Column(nullable = false,length=100)
     private String clientEmail;
     private String ClientCity;

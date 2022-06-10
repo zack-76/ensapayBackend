@@ -51,18 +51,14 @@ public class AgentService {
         agent.setAgentBirthDate(newAgent.getAgentBirthDate());
         agent.setAgentPhone(newAgent.getAgentPhone());
         agent.setFirstConnection(true);
-        User agentUser =  new User();
+        User agentUser = new User();
         agentUser.setRoleName("Agent");
         agentUser.setUsername(generatedUsername);
-
         agentUser.setUserPassword(passwordEncoder.encode(encodedPassword));
         agent.setAgentUser(agentUser);
-
         agentRepository.save(agent);
-
-        sendAgentEmail(newAgent,generatedUsername,generatedPassword);
-
-        return "Agent succesffuly added" ;
+        sendAgentEmail(newAgent, generatedUsername, generatedPassword);
+        return "Agent successfully added";
     }
 
 
@@ -70,13 +66,13 @@ public class AgentService {
             throws MessagingException, UnsupportedEncodingException {
 
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message,true);
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setFrom("ensapay_2022@outlook.com");
         helper.setTo(agent.getAgentEmail());
 
         String subject = "Here's your Credentials!";
-        String content = "<p>Hello Agent " + agent.getAgentFirstName() + " "+agent.getAgentLastName()+"</p>"
+        String content = "<p>Hello Agent " + agent.getAgentFirstName() + " " + agent.getAgentLastName() + "</p>"
                 + "<p>For security reason, you're required to use the following credentials "
                 + "Username to login:</p>"
                 + "<p><b>" + generatedUsername + "</b></p>"
@@ -87,7 +83,7 @@ public class AgentService {
 
         helper.setSubject(subject);
 
-        helper.setText(content,true );
+        helper.setText(content, true);
 
         mailSender.send(message);
     }
@@ -111,7 +107,6 @@ public class AgentService {
         agent.setAgentUser(agentUser);
 
 
-
         agentRepository.save(agent);
 
     }
@@ -126,11 +121,8 @@ public class AgentService {
     }
 
     public Agent getAgentProfile(String username) {
-
-            return   this.agentRepository.findAgentByIdentifiant(username);
-
+        return this.agentRepository.findAgentByIdentifiant(username);
     }
-
 
 
 }

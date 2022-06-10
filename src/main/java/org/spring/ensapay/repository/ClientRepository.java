@@ -32,9 +32,9 @@ public interface ClientRepository extends JpaRepository<Client,Long> {
  @Query(value="SELECT client FROM Client client  WHERE client.clientUser.username=:username")
  Client findClientByIdentifiant (@Param(value = "username") String username);
 
-//    @Modifying
-//    @Query("update Client c set c.clientSolde =:clientSolde where c.clientId=:clientId")
-//    void updateClientSoldeByClientId(@Param("clientSolde") Integer clientSolde,@Param("clientId") Long clientId);
+    @Modifying
+    @Query("update Client c set c.clientSolde =:clientSolde where c.clientId=:clientId")
+    void updateClientSoldeByClientId(@Param("clientSolde") Integer clientSolde,@Param("clientId") Long clientId);
 @Modifying
 @Query(value = "UPDATE Client client SET client.firstConnection=false WHERE client.clientUser.username=:username")
 int UpdateFirstConnectionAgentByid(@Param(value = "username") String username);

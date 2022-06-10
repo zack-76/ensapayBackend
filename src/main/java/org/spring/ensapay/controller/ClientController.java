@@ -36,8 +36,6 @@ public class ClientController {
 
 
     @PostMapping("/regiterNewUserClient")
-//    @PreAuthorize("hasRole('Agent')")
-
     //@PreAuthorize("hasRole('Agent')")
     public ResponseEntity<String> uploadClientIdentity(@RequestParam(name = "file") MultipartFile[] identities,
     @RequestParam(name = "Company" ) String Company,
@@ -45,12 +43,14 @@ public class ClientController {
     @RequestParam(name = "email") String email,
     @RequestParam(name = "FirstName") String FirstName,
     @RequestParam(name = "LastName") String LastName,
+    @RequestParam(name = "Solde") Integer Solde,
      @RequestParam(name = "Address") String Address,
+     @RequestParam(name = "Phone") String Phone,
      @RequestParam(name = "City") String City,
      @RequestParam(name = "Zip") String Zip,
      @RequestParam(name = "Country") String Country)throws MessagingException,
             UnsupportedEncodingException  {
-        ClientDto clientDto=new ClientDto(FirstName,LastName,Address,email,Username,City,Zip,Country);
+        ClientDto clientDto=new ClientDto(FirstName,LastName,Phone, Address,Solde,email,Username,City,Zip,Country);
         try {
             Arrays.asList(identities).stream().forEach(file -> {
                 clientService.save(file);

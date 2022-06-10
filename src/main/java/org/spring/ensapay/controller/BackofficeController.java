@@ -18,10 +18,10 @@ public class BackofficeController {
     @Autowired
     private UserService userService;
 
-   /* @PostConstruct
+    @PostConstruct
     public void initRoleAndUser() {
         backofficeService.initBackoffice();
-    }*/
+    }
 
 
 
