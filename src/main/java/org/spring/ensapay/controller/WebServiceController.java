@@ -2,7 +2,6 @@ package org.spring.ensapay.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spring.ensapay.dto.ValidatePaymentDto;
-import org.spring.ensapay.entity.Creditor;
 import org.spring.ensapay.entity.Facture;
 import org.spring.ensapay.webservice.WebServiceCMI;
 import org.springframework.beans.factory.annotation.Autowired;

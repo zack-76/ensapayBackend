@@ -1,18 +1,17 @@
 package org.spring.ensapay.webservice;
 
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.rest.api.v2010.account.MessageCreator;
+import com.twilio.type.PhoneNumber;
 import org.spring.ensapay.dto.ValidatePaymentDto;
-import org.spring.ensapay.entity.Creditor;
 import org.spring.ensapay.entity.Facture;
 import org.spring.ensapay.entity.ValidatePayment;
 import org.spring.ensapay.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +22,6 @@ import java.util.Random;
 @Transactional
 public class WebServiceCMI {
 
-    //private static final Integer generatedOTP = new Random().nextInt(999998 + 1)  + 100000;
 
     @Autowired
     private ValidatePaymentRepository validatePaymentRepository;
@@ -83,7 +81,7 @@ public class WebServiceCMI {
                 addFacture(validatePaymentDto.getClientId(),
                         validatePaymentDto.getCodeCreditor(),
                         validatePaymentDto.getCodeDept(),validatePaymentDto.getImpaye());
-                sendValidateEmail(validatePaymentDto.getClientId());
+                sendSms(validatePaymentDto.getClientId());
                 return "success";
             }else
                 return "can't pursuite your operation your solde is lower the facture's debt";
@@ -106,33 +104,22 @@ public class WebServiceCMI {
     }
 
 
-    public List<Facture> getFactures(){
-        return factureRepository.findAll();
-    }
 
-
-    public void sendValidateEmail(Long id)
-            throws MessagingException, UnsupportedEncodingException {
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message,true);
-
-        helper.setFrom("ensapay_2022@outlook.com");
-        String clientEmail =  clientRepository.findClientEmailByClientId(id);
+    public void sendSms(Long id){
+        String clientPhone = clientRepository.findClientPhoneByClientId(id);
         String clientFirstName = clientRepository.findClientFirstNameByClientId(id);
         String clientLastName =  clientRepository.findClientLastNameByClientId(id);
-        helper.setTo(clientEmail);
 
-        String subject = "Payment success";
-        String content = "<p>Hello Client " + clientFirstName + " "+clientLastName+"</p>"
-                + "<p>Your Payment has been with succes"
-                + "<p>Note: Our EnsaPay platform give you the best and the secure services.</p>";
+        String message = "<p>Hello Client " + clientFirstName + " "+clientLastName+"</p>"
+                          + "<p>Your Payment has been done with succes"
+                            + "<p>Note: Our EnsaPay platform give you the best and the secure services.</p>" ;
 
-        helper.setSubject(subject);
-
-        helper.setText(content,true );
-
-        mailSender.send(message);
+        MessageCreator creator = Message.creator(
+                new PhoneNumber(clientPhone),
+                new PhoneNumber("number"),
+                message
+        );
+        creator.create();
     }
 
     public List<Facture> getFacutreByClientName(String clientName){

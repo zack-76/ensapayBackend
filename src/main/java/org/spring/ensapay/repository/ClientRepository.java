@@ -27,5 +27,8 @@ public interface ClientRepository extends JpaRepository<Client,Long> {
     @Query("update Client c set c.clientSolde =:clientSolde where c.clientId=:clientId")
     void updateClientSoldeByClientId(@Param("clientSolde") Integer clientSolde,@Param("clientId") Long clientId);
 
+    @Query("select c.clientPhone from Client c where c.clientId=:clientId")
+    String findClientPhoneByClientId(@Param("clientId") Long clientId);
+
 
 }
