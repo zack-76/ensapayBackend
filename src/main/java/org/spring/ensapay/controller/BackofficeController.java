@@ -1,7 +1,5 @@
 package org.spring.ensapay.controller;
 
-import org.spring.ensapay.entity.JwtRequest;
-import org.spring.ensapay.entity.JwtResponse;
 import org.spring.ensapay.service.BackofficeService;
 import org.spring.ensapay.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +18,10 @@ public class BackofficeController {
     @Autowired
     private UserService userService;
 
-    @PostConstruct
+   /* @PostConstruct
     public void initRoleAndUser() {
         backofficeService.initBackoffice();
-    }
+    }*/
 
 
 

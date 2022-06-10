@@ -18,9 +18,9 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clientId;
-    //@Column(nullable = false,length = 25)
+    @Column(nullable = false,length = 25)
     private String clientFirstName;
-    //@Column(nullable = false,length = 25)
+    @Column(nullable = false,length = 25)
     private String clientLastName;
     //@Column(nullable = false,length = 25)
     //private String clientPhone;
@@ -42,4 +42,5 @@ public class Client {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     User clientUser;
+
 }

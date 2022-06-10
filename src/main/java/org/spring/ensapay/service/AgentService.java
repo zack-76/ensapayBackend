@@ -106,7 +106,7 @@ public class AgentService {
         agent.setFirstConnection(true);
         User agentUser = new User();
         agentUser.setUsername("agent1");
-        agentUser.setUserPassword(passwordEncoder.encode("1234"));
+        agentUser.setUserPassword(passwordEncoder.encode("12345678"));
         agentUser.setRoleName("Agent");
         agent.setAgentUser(agentUser);
 

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Getter
@@ -14,7 +15,7 @@ public class Debt {
 
     @Id
     private String codeDebt;
-    //@NotBlank(message = "Name is required")
+    @NotBlank(message = "Name is required")
     private String nameDebt;
 
     @ManyToOne(cascade = CascadeType.ALL)

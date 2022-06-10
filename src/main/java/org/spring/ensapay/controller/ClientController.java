@@ -2,6 +2,7 @@ package org.spring.ensapay.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spring.ensapay.dto.ClientDto;
+import org.spring.ensapay.entity.Agent;
 import org.spring.ensapay.entity.Client;
 import org.spring.ensapay.service.ClientService;
 import org.spring.ensapay.service.UserService;
@@ -14,11 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
-import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -38,6 +36,8 @@ public class ClientController {
 
 
     @PostMapping("/regiterNewUserClient")
+//    @PreAuthorize("hasRole('Agent')")
+
     //@PreAuthorize("hasRole('Agent')")
     public ResponseEntity<String> uploadClientIdentity(@RequestParam(name = "file") MultipartFile[] identities,
     @RequestParam(name = "Company" ) String Company,
@@ -55,19 +55,27 @@ public class ClientController {
             Arrays.asList(identities).stream().forEach(file -> {
                 clientService.save(file);
 
+                log.info("Agent Identities has successfully stored");
             });
         } catch (Exception e) {
             log.warn("could't not store identites",e);
         }
         clientService.registerNewUserClient(clientDto);
+        log.info("Client"+clientDto.getClientFirstName()+" "+clientDto.getClientLastName()+ "added successfully ");
         return ResponseEntity.status(HttpStatus.OK).body("client added");
+
     }
 
     @GetMapping("/client/solde/{clientId}")
-    //@PreAuthorize("hasRole('Client')")
+    @PreAuthorize("hasRole('Client')")
     public ResponseEntity<Integer> ClientSolde(@PathVariable("clientId") Long clientId){
+        log.info("client"+clientId+" has got he's Solde");
         return ResponseEntity.ok().body(clientService.getSolde(clientId));
     }
 
-
+    @GetMapping("/profileClient/{username}")
+    public @ResponseBody
+    Client getClient(@PathVariable(value  = "username") String username) {
+        return this.clientService.getClientProfile(username);
+    }
 }

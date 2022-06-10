@@ -28,7 +28,9 @@ public class ClientService {
 
     private final Path root = Paths.get("src\\main\\resources\\identities\\clients");
 
-    private JavaMailSender mailSender = new JavaMailSenderImpl();
+
+    @Autowired(required = true)
+    private  JavaMailSender mailSender;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -61,7 +63,7 @@ public class ClientService {
         clientUser.setUsername(newClient.getClientUsername());
 
 
-        clientUser.setUserPassword(encodedPassword);
+        clientUser.setUserPassword(passwordEncoder.encode("12345678"));
         client.setClientUser(clientUser);
 
         clientRepository.save(client);
@@ -76,7 +78,7 @@ public class ClientService {
     public void sendClientEmail(ClientDto client , String otpPassword )
             throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
+        MimeMessageHelper helper = new MimeMessageHelper(message,true);
 
         helper.setFrom("ensapay_2022@outlook.com");
         helper.setTo(client.getClientEmail());
@@ -135,6 +137,12 @@ public class ClientService {
 
     public Integer getSolde(Long clientId) {
         return clientRepository.findClientSoldeByClientId(clientId);
+    }
+
+    public Client getClientProfile(String username) {
+
+        return   this.clientRepository.findClientByIdentifiant(username);
+
     }
 
 }

@@ -37,10 +37,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors();
         http.csrf().disable()
-                .authorizeRequests().antMatchers( "/user/authenticate",
-                                                            "/agent/regiterNewUserAgent",
-                                                            "/client/regiterNewUserClient","/user/**","/client/uploadClientIdentities",
-                "/forgetPassword/**")
+                .authorizeRequests().antMatchers("/user/authenticate",
+
+                        "/agent/regiterNewUserAgent",
+                        "/client/regiterNewUserClient", "/user/**", "/client/uploadClientIdentities",
+                        "/forgetPassword/**",
+                        "/creditor/getAll")
+
                 .permitAll()
                 .antMatchers(HttpHeaders.ALLOW).permitAll()
                 .anyRequest().authenticated()
@@ -57,7 +60,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 
     @Bean

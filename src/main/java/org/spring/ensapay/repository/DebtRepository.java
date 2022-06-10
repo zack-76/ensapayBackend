@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DebtRepository extends JpaRepository<Debt,String> {
+
+    String findDebtNameByCodeDebt(String codeDebt);
 }
