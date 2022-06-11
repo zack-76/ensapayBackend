@@ -48,21 +48,18 @@ public class ClientService {
         Client client = new Client();
         client.setClientFirstName(newClient.getClientFirstName());
         client.setClientLastName(newClient.getClientLastName());
-        //client.setClientCIN(newClient.getClientCIN());
-        //client.setClientBirthDate(newClient.getClientBirthDate());
+        client.setClientCIN(newClient.getClientCIN());
         client.setClientEmail(newClient.getClientEmail());
-        //client.setClientSolde(newClient.getClientSolde());
+        client.setClientSolde(newClient.getClientSolde());
         client.setClientCountry(newClient.getClientCountry());
         client.setClientAddress(newClient.getClientAddress());
         client.setClientCity(newClient.getClientCity());
         client.setClientZip(newClient.getClientZip());
-        client.setClientUsername(newClient.getClientUsername());
+        client.setClientPhone(newClient.getClientPhone());
         client.setFirstConnection(true);
         User clientUser = new User();
+        clientUser.setUsername(newClient.getClientPhone());
         clientUser.setRoleName("Client");
-        clientUser.setUsername(newClient.getClientUsername());
-
-
         clientUser.setUserPassword(passwordEncoder.encode("12345678"));
         client.setClientUser(clientUser);
 
@@ -88,7 +85,7 @@ public class ClientService {
         String content = "<p>Hello Client " + client.getClientFirstName() + " " + client.getClientLastName() + "</p>"
                 + "<p>For security reason, you're required to use the following "
                 + "Username to login:</p>"
-                + "<p><b>" + client.getClientUsername() + "</b></p>"
+                + "<p><b>" + client.getClientPhone() + "</b></p>"
                 + "One Time Password to login:</p>"
                 + "<p><b>" + otpPassword + "</b></p>"
                 + "<br>"
@@ -101,27 +98,6 @@ public class ClientService {
         mailSender.send(message);
     }
 
-
-    public void initClient() {
-
-      /*  Client client = new Client();
-        client.setClientFirstName("yessine");
-        client.setClientLastName("Jaoua");
-        client.setClientAddress("Tunis");
-        client.setClientPhone("O671");
-        client.setClientCIN("BG7865");
-        client.setClientSolde(500);
-        client.setClientBirthDate("16-10-1999");
-        client.setClientEmail("zessabri80@gmail.com");
-        User clientUser = new User();
-        clientUser.setUsername("O671");
-        clientUser.setUserPassword(passwordEncoder.encode("1234"));
-        clientUser.setRoleName("Client");
-        client.setClientUser(clientUser);
-
-        clientRepository.save(client);
-*/
-    }
 
 
     public void save(MultipartFile file) {

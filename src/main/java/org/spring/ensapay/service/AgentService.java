@@ -48,8 +48,10 @@ public class AgentService {
         agent.setAgentCIN(newAgent.getAgentCIN());
         agent.setAgentAddress(newAgent.getAgentAddress());
         agent.setAgentEmail(newAgent.getAgentEmail());
-        agent.setAgentBirthDate(newAgent.getAgentBirthDate());
         agent.setAgentPhone(newAgent.getAgentPhone());
+        agent.setAgentCity(newAgent.getAgentCity());
+        agent.setAgentZip(newAgent.getAgentZip());
+        agent.setAgentCountry(newAgent.getAgentCountry());
         agent.setFirstConnection(true);
         User agentUser = new User();
         agentUser.setRoleName("Agent");
@@ -97,15 +99,16 @@ public class AgentService {
         agent.setAgentAddress("Tunis");
         agent.setAgentPhone("O671");
         agent.setAgentCIN("BG7865");
-        agent.setAgentBirthDate("16-10-1999");
         agent.setAgentEmail("zessabri80@gmail.com");
         agent.setFirstConnection(true);
+        agent.setAgentZip("20520");
+        agent.setAgentCountry("Morocco");
+        agent.setAgentCity("Casablanca");
         User agentUser = new User();
         agentUser.setUsername("agent1");
         agentUser.setUserPassword(passwordEncoder.encode("12345678"));
         agentUser.setRoleName("Agent");
         agent.setAgentUser(agentUser);
-
 
         agentRepository.save(agent);
 

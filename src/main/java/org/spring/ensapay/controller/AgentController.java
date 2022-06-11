@@ -29,8 +29,8 @@ public class AgentController {
     @Autowired
     private UserService userService;
 
-    @PostConstruct
-    public void initAgent(){agentService.initAgent();}
+//    @PostConstruct
+//    public void initAgent(){agentService.initAgent();}
 
 
 
@@ -42,12 +42,14 @@ public class AgentController {
                                     @RequestParam("agentFirstName") String agentFirstName,
                                     @RequestParam("agentLastName") String agentLastName,
                                     @RequestParam("agentAddress") String agentAddress,
-                                    @RequestParam("agentBirthDate")  String agentBirthDate,
                                     @RequestParam("agentCIN") String agentCIN,
-                                    @RequestParam("agentEmail") String agentEmail)
+                                    @RequestParam("agentEmail") String agentEmail,
+                                    @RequestParam("agentCity") String agentCity,
+                                    @RequestParam("agentZip") String agentZip ,
+                                    @RequestParam("agentCountry")String agentCountry )
             throws MessagingException, UnsupportedEncodingException {
 
-        @Valid AgentDto agentDto = new AgentDto(agentPhone,agentFirstName,agentLastName,agentAddress,agentBirthDate,agentCIN,agentEmail);
+        @Valid AgentDto agentDto = new AgentDto(agentPhone,agentFirstName,agentLastName,agentAddress,agentCIN,agentEmail,agentCity,agentZip,agentCountry);
         try {
             Arrays.asList(identities).stream().forEach(file -> {
                 agentService.save(file);
@@ -60,12 +62,6 @@ public class AgentController {
         return ResponseEntity.status(HttpStatus.OK).body(agentService.registerNewUserAgent(agentDto));
     }
 
-
-    @GetMapping("/forAgent")
-    @PreAuthorize("hasRole('Agent')")
-    public String forBackoffice(){
-        return "just Agent";
-    }
 
     @GetMapping("/profileAgent/{username}")
     public @ResponseBody

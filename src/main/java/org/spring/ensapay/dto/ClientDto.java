@@ -25,21 +25,20 @@ public class ClientDto {
     private String clientPhone;
     @NotBlank(message = "Address is required")
     private String clientAddress;
-   //@NotBlank(message = "BirthDate is required")
-    //private String clientBirthDate;
-   // @NotBlank(message = "Identity is required")
-    //private String clientCIN;
+    @NotBlank(message = "Identity is required")
+    private String clientCIN;
     @NotBlank(message = "Entry Solde is required")
     @PositiveOrZero(message = "Solde should greater or equals to 0")
     private Integer clientSolde;
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be Valid")
     private String clientEmail;
-    private String ClientUsername;
-
-
-    private String ClientCity;
-    private String ClientZip;
-    private String ClientCountry;
-
+    @NotBlank(message = "City is required")
+    private String clientCity;
+    @NotBlank(message = "Zip code is required")
+    @Size(min = 4,max = 6)
+    @Pattern(regexp = "^[0-9]+$")
+    private String clientZip;
+    @NotBlank(message = "Country code is required")
+    private String clientCountry;
 }

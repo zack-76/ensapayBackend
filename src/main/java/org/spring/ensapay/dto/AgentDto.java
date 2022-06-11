@@ -28,11 +28,17 @@ public class AgentDto {
     private String agentLastName;
     @NotBlank(message = "Adresse is required")
     private String agentAddress;
-    @NotBlank(message = "BirthDate is required")
-    private String agentBirthDate;
     @NotBlank(message = "Identity is required")
     private String agentCIN;
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be Valid")
     private String agentEmail;
+    @NotBlank(message = "City is required")
+    private String agentCity;
+    @NotBlank(message = "Zip code is required")
+    @Size(min = 4,max = 6)
+    @Pattern(regexp = "^[0-9]+$")
+    private String agentZip;
+    @NotBlank(message = "Country code is required")
+    private String agentCountry;
 }

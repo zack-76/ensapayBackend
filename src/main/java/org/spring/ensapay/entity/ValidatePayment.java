@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Getter
@@ -16,5 +17,6 @@ import javax.persistence.Id;
 public class ValidatePayment {
     @Id
     private String username;
+    @NotBlank(message = "token is required")
     private Integer token;
 }

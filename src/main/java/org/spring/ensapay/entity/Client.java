@@ -26,16 +26,17 @@ public class Client {
     private String clientPhone;
     @Column(nullable = false)
     private String clientAddress;
-    //@Column(nullable = false,length = 20)
-    private String ClientUsername;
-    //@Column(nullable = false,length = 10,name="client_cin")
-
+    @Column(nullable = false,length = 10,name="client_cin")
+    private String clientCIN;
     @Column(nullable = false)
     private Integer clientSolde;
-   // @Column(nullable = false,length=100)
+   @Column(nullable = false,length=100)
     private String clientEmail;
+    @Column(nullable = false,length=100)
     private String ClientCity;
+    @Column(nullable = false,length=100)
     private String ClientZip;
+    @Column(nullable = false,length=100)
     private String ClientCountry;
 
     private boolean firstConnection;

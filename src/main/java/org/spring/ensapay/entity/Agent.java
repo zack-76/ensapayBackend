@@ -25,12 +25,16 @@ public class Agent {
     private String agentLastName;
     @Column(nullable = false)
     private String agentAddress;
-    @Column(nullable = false,length = 20)
-    private String agentBirthDate;
     @Column(nullable = false,length = 20,name="agent_cin")
     private String agentCIN;
     @Column(nullable = false,length = 100)
     private String agentEmail;
+    @Column(nullable = false,length=100)
+    private String agentCity;
+    @Column(nullable = false,length=100)
+    private String agentZip;
+    @Column(nullable = false,length=100)
+    private String agentCountry;
 
     private boolean firstConnection;
 

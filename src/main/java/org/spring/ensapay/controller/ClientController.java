@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
+import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
@@ -29,28 +30,22 @@ public class ClientController {
     @Autowired
     private UserService userService;
 
-    @PostConstruct
-    public void initClient(){clientService.initClient();}
-
-
-
 
     @PostMapping("/regiterNewUserClient")
     //@PreAuthorize("hasRole('Agent')")
     public ResponseEntity<String> uploadClientIdentity(@RequestParam(name = "file") MultipartFile[] identities,
-    @RequestParam(name = "Company" ) String Company,
-    @RequestParam(name = "Username") String Username,
-    @RequestParam(name = "email") String email,
-    @RequestParam(name = "FirstName") String FirstName,
-    @RequestParam(name = "LastName") String LastName,
-    @RequestParam(name = "Solde") Integer Solde,
-     @RequestParam(name = "Address") String Address,
-     @RequestParam(name = "Phone") String Phone,
-     @RequestParam(name = "City") String City,
-     @RequestParam(name = "Zip") String Zip,
-     @RequestParam(name = "Country") String Country)throws MessagingException,
-            UnsupportedEncodingException  {
-        ClientDto clientDto=new ClientDto(FirstName,LastName,Phone, Address,Solde,email,Username,City,Zip,Country);
+                                                       @RequestParam(name = "email") String email,
+                                                        @RequestParam(name = "FirstName") String firstName,
+                                                        @RequestParam(name = "LastName") String lastName,
+                                                        @RequestParam(name = "cin") String cin,
+                                                        @RequestParam(name = "Solde") Integer solde,
+                                                         @RequestParam(name = "Address") String address,
+                                                         @RequestParam(name = "Phone") String phone,
+                                                         @RequestParam(name = "City") String city,
+                                                         @RequestParam(name = "Zip") String zip,
+                                                         @RequestParam(name = "Country") String country)
+            throws MessagingException, UnsupportedEncodingException  {
+        @Valid ClientDto clientDto=new ClientDto(firstName,lastName,phone,cin, address,solde,email,city,zip,country);
         try {
             Arrays.asList(identities).stream().forEach(file -> {
                 clientService.save(file);
