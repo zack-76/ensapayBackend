@@ -30,5 +30,11 @@ public interface ClientRepository extends JpaRepository<Client,Long> {
     @Query("select c.clientPhone from Client c where c.clientId=:clientId")
     String findClientPhoneByClientId(@Param("clientId") Long clientId);
 
+    @Query("select c.clientFirstName from Client c where c.clientUser.username=:username")
+    String findClientFirstNameByClientUserUsername(@Param("username") String username);
+
+    @Query("select c.clientLastName from Client c where c.clientUser.username=:username")
+    String findClientLastNameByClientUserUsername(@Param("username") String username);
+
 
 }

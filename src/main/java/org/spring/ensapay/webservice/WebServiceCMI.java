@@ -45,11 +45,6 @@ public class WebServiceCMI {
     private FactureRepository factureRepository;
 
 
-    public Integer sendValidatetoken(String username) {
-        ValidatePayment validatePayment = validatePaymentRepository.findById(username).get();
-        return validatePayment.getToken();
-    }
-
     public Integer getImpay(String reference,String username){
 
         ValidatePayment validatePayment =  new ValidatePayment();
@@ -74,14 +69,12 @@ public class WebServiceCMI {
         ValidatePayment validatePayment = validatePaymentRepository.findById(username).get();
 
         if(validatePaymentDto.getGeneratedToken() == validatePayment.getToken()){
-            validatePaymentRepository.deleteById(username);
             Integer clientSolde = clientRepository.findClientSoldeByClientId(validatePaymentDto.getClientId());
             if(clientSolde >= validatePaymentDto.getImpaye()){
                 clientRepository.updateClientSoldeByClientId(clientSolde-=validatePaymentDto.getImpaye(),validatePaymentDto.getClientId());
                 addFacture(validatePaymentDto.getClientId(),
                         validatePaymentDto.getCodeCreditor(),
                         validatePaymentDto.getCodeDept(),validatePaymentDto.getImpaye());
-                sendSms(validatePaymentDto.getClientId());
                 return "success";
             }else
                 return "can't pursuite your operation your solde is lower the facture's debt";
@@ -103,23 +96,36 @@ public class WebServiceCMI {
         factureRepository.save(facture);
     }
 
-
-
-    public void sendSms(Long id){
-        String clientPhone = clientRepository.findClientPhoneByClientId(id);
-        String clientFirstName = clientRepository.findClientFirstNameByClientId(id);
-        String clientLastName =  clientRepository.findClientLastNameByClientId(id);
+    public void sendValidateSms(String username){
+        //String clientPhone = clientRepository.findClientPhoneByClientId(id);
+        String clientFirstName = clientRepository.findClientFirstNameByClientUserUsername(username);
+        String clientLastName =  clientRepository.findClientLastNameByClientUserUsername(username);
+        ValidatePayment validatePayment = validatePaymentRepository.findById(username).get();
 
         String message = "<p>Hello Client " + clientFirstName + " "+clientLastName+"</p>"
-                          + "<p>Your Payment has been done with succes"
-                            + "<p>Note: Our EnsaPay platform give you the best and the secure services.</p>" ;
+                          + "<p>Please enter this Token to verify your identity: "
+                           +"<p><b>"+validatePayment.getToken()+"<p><b>"
+                          + "<p>Note: Our EnsaPay platform give you the best and the secure services.</p>" ;
 
         MessageCreator creator = Message.creator(
-                new PhoneNumber(clientPhone),
-                new PhoneNumber("number"),
+                new PhoneNumber(username),
+                new PhoneNumber("+number"),
                 message
         );
         creator.create();
+    }
+
+    public boolean validateToken(ValidatePayment validatePayment){
+        if(validatePaymentRepository.findById(validatePayment.getUsername()).isPresent()) {
+            ValidatePayment validatePayment1 = validatePaymentRepository.findById(validatePayment.getUsername()).get();
+            if(validatePayment1.getToken()==validatePayment.getToken()){
+                validatePaymentRepository.deleteById(validatePayment.getUsername());
+                return true;
+            }else
+                return false;
+
+        }else
+            return false;
     }
 
     public List<Facture> getFacutreByClientName(String clientName){

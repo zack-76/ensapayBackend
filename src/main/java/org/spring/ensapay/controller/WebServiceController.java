@@ -3,6 +3,7 @@ package org.spring.ensapay.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.spring.ensapay.dto.ValidatePaymentDto;
 import org.spring.ensapay.entity.Facture;
+import org.spring.ensapay.entity.ValidatePayment;
 import org.spring.ensapay.webservice.WebServiceCMI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +30,23 @@ public class WebServiceController {
         return ResponseEntity.ok().body(webServiceCMI.getImpay(reference,username));
     }
 
-    @GetMapping("/validateToken/{username}")
+    @GetMapping("/getValidateToken/{username}")
     @PreAuthorize("hasRole('Client')")
-    public ResponseEntity<Integer> getValidateToken(@PathVariable("username") String username){
-        log.info("Validate Token passed to the Client "+username);
-        return  ResponseEntity.ok().body(webServiceCMI.sendValidatetoken(username));
+    public ResponseEntity<String> getValidateSms(@PathVariable("username") String username){
+        log.info("Validate token pased in SMS to: "+username);
+        try{
+            webServiceCMI.sendValidateSms(username);
+            return ResponseEntity.ok().body("We have sent you an SMS to identify you! ");
+        }catch (Exception e){
+            return ResponseEntity.status(401).body("Something went wrowng");
+        }
+    }
+
+    @PostMapping("/validateToken")
+    @PreAuthorize("hasRole('Client')")
+    public ResponseEntity<Boolean> ValidateToken(@RequestBody ValidatePayment validatePayment){
+        log.info("Validate Token passed to the Client "+validatePayment.getUsername());
+        return  ResponseEntity.ok().body(webServiceCMI.validateToken(validatePayment));
     }
 
     @PostMapping("/validatePayment/{username}")
