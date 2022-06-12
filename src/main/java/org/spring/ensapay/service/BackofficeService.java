@@ -1,5 +1,6 @@
 package org.spring.ensapay.service;
 
+import org.spring.ensapay.entity.Agent;
 import org.spring.ensapay.entity.Backoffice;
 import org.spring.ensapay.entity.User;
 import org.spring.ensapay.repository.BackofficeRepository;
@@ -32,7 +33,7 @@ public class BackofficeService {
         backOffice.setBackofficeEmail("zaka.raja.1949@gmail.com");
         User backOfficeUser = new User();
         backOfficeUser.setUsername("backoffice1");
-        backOfficeUser.setUserPassword(passwordEncoder.encode("1234"));
+        backOfficeUser.setUserPassword(passwordEncoder.encode("12345678"));
 
         backOfficeUser.setRoleName("Backoffice");
         backOffice.setBackofficeUser(backOfficeUser);
@@ -42,4 +43,7 @@ public class BackofficeService {
 
     }
 
+    public Backoffice getBackofficeProfile(String username) {
+        return this.backofficeRepository.findAgentByIdentifiant(username);
+    }
 }

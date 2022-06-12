@@ -41,7 +41,7 @@ public class Client {
 
     private boolean firstConnection;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     User clientUser;
 
 }

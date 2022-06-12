@@ -1,5 +1,7 @@
 package org.spring.ensapay.controller;
 
+import org.spring.ensapay.entity.Agent;
+import org.spring.ensapay.entity.Backoffice;
 import org.spring.ensapay.service.BackofficeService;
 import org.spring.ensapay.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +17,16 @@ public class BackofficeController {
     @Autowired
     private BackofficeService backofficeService;
 
-    @Autowired
-    private UserService userService;
+      @PostConstruct
+     public void initRoleAndUser() {
+          backofficeService.initBackoffice();
+      }
 
-//    @PostConstruct
-//    public void initRoleAndUser() {
-//        backofficeService.initBackoffice();
-//    }
-
+    @GetMapping("/profileBackoffice/{username}")
+    public @ResponseBody
+    Backoffice getBackoffice(@PathVariable(value  = "username") String username) {
+        return this.backofficeService.getBackofficeProfile(username);
+    }
 
 
     @GetMapping("/forBackoffice")

@@ -29,15 +29,15 @@ public class AgentController {
     @Autowired
     private UserService userService;
 
-//    @PostConstruct
-//    public void initAgent(){agentService.initAgent();}
+     @PostConstruct
+     public void initAgent(){agentService.initAgent();}
 
 
 
 
     @PostMapping("/regiterNewUserAgent")
     @PreAuthorize("hasRole('Backoffice')")
-    public ResponseEntity<String> regiterNewUserAgent(@RequestParam("identity") MultipartFile[] identities,
+    public ResponseEntity<String> regiterNewUserAgent(@RequestParam("agentFile") MultipartFile[] identities,
                                     @RequestParam("agentPhone") String agentPhone,
                                     @RequestParam("agentFirstName") String agentFirstName,
                                     @RequestParam("agentLastName") String agentLastName,
