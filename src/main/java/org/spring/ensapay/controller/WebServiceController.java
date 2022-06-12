@@ -54,4 +54,9 @@ public class WebServiceController {
     public ResponseEntity<List<Facture>> getAllFactures(@PathVariable("username") String username){
         return ResponseEntity.status(200).body(webServiceCMI.getFacutreByClientName(username));
     }
+
+    @GetMapping("/factures/{username}/{creditor}")
+    public ResponseEntity<List<Facture>> getsearchFactures(@PathVariable("username") String username,@PathVariable("creditor") String creditor){
+        return ResponseEntity.status(200).body(webServiceCMI.getFacutreByClientNameCreditor(username,creditor));
+    }
 }

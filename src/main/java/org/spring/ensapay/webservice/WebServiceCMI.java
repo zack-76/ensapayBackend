@@ -140,4 +140,9 @@ public class WebServiceCMI {
         String clientName = clientRepository.findClientFirstNameByClientUserUsername(username)+" "+clientRepository.findClientLastNameByClientUserUsername(username);
         return factureRepository.findByClientName(clientName);
     }
+
+    public List<Facture> getFacutreByClientNameCreditor(String username, String creditor) {
+        String clientName = clientRepository.findClientFirstNameByClientUserUsername(username)+" "+clientRepository.findClientLastNameByClientUserUsername(username);
+        return factureRepository.findByClientNameAndCreditorName(clientName,creditor);
+    }
 }
