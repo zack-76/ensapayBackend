@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface FactureRepository extends JpaRepository<Facture,Integer> {
 
-    List<Facture> findByClientName(String clientName);
+    List<Facture> findByNumeroClient(String numeroClient);
 
     @Query(
-            value = "SELECT * FROM Facture WHERE client_name=?1 AND creditor_name LIKE ?2%",nativeQuery = true
+            value = "SELECT * FROM Facture WHERE numero_client=?1 AND creditor_name LIKE ?2%",nativeQuery = true
             )
-    List<Facture> findByClientNameAndCreditorName(String clientName, String creditor);
+    List<Facture> findByClientNameAndCreditorName(String numeroClients, String creditor);
 }

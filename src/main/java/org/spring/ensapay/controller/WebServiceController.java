@@ -25,7 +25,7 @@ public class WebServiceController {
 
 
     @PostMapping("/getImpay/{username}/{reference}")
-  //  @PreAuthorize("hasRole('Client')")
+  //@PreAuthorize("hasRole('Client')")
     public @ResponseBody
     Map<String,String> getImpay(@PathVariable("reference") String reference, @PathVariable("username") String username){
         log.info("Impay pased to: "+reference);

@@ -40,6 +40,7 @@ public class Client {
     private String ClientCountry;
 
     private boolean firstConnection;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     User clientUser;

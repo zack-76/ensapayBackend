@@ -32,7 +32,7 @@ public class BackofficeService {
         backOffice.setBackofficeEmail("zaka.raja.1949@gmail.com");
         User backOfficeUser = new User();
         backOfficeUser.setUsername("backoffice1");
-        backOfficeUser.setUserPassword(passwordEncoder.encode("1234"));
+        backOfficeUser.setUserPassword(passwordEncoder.encode("12345678"));
 
         backOfficeUser.setRoleName("Backoffice");
         backOffice.setBackofficeUser(backOfficeUser);

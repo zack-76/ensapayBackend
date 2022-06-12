@@ -84,7 +84,7 @@ public class WebServiceCMI {
             validatePaymentRepository.deleteById(username);
             Integer clientSolde = clientRepository.findClientSoldeByClientId(username);
             if(clientSolde >= validatePaymentDto.getImpaye()){
-//                clientRepository.updateClientSoldeByClientId(clientSolde-=validatePaymentDto.getImpaye(),validatePaymentDto.getClientId());
+           clientRepository.updateClientSoldeByClientId(clientSolde-=validatePaymentDto.getImpaye(),username);
                 addFacture(username,validatePaymentDto.getNameCreditor(),
                         validatePaymentDto.getNameDept(),
                         validatePaymentDto.getImpaye());
@@ -100,6 +100,7 @@ public class WebServiceCMI {
         Facture facture =  new Facture();
         facture.setReference( new Random().nextInt(999998+1)+100000);
         String clientFullName = clientRepository.findClientFirstNameByClientUserUsername(username)+" "+clientRepository.findClientLastNameByClientUserUsername(username);
+        facture.setNumeroClient(username);
         facture.setClientName(clientFullName);
         facture.setCreditorName(nameCreditor);
         facture.setDebtName(nameDebt);
@@ -137,12 +138,12 @@ public class WebServiceCMI {
         mailSender.send(message);
     }!*/
     public List<Facture> getFacutreByClientName(String username){
-        String clientName = clientRepository.findClientFirstNameByClientUserUsername(username)+" "+clientRepository.findClientLastNameByClientUserUsername(username);
-        return factureRepository.findByClientName(clientName);
+
+        return factureRepository.findByNumeroClient(username);
     }
 
     public List<Facture> getFacutreByClientNameCreditor(String username, String creditor) {
-        String clientName = clientRepository.findClientFirstNameByClientUserUsername(username)+" "+clientRepository.findClientLastNameByClientUserUsername(username);
-        return factureRepository.findByClientNameAndCreditorName(clientName,creditor);
+
+        return factureRepository.findByClientNameAndCreditorName(username,creditor);
     }
 }

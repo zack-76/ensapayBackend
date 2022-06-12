@@ -25,5 +25,7 @@ public class Facture {
     private String DebtName;
     @Column(nullable = false)
     private Integer impaye;
+    @Column(nullable = false)
+    private String numeroClient;
 
 }

@@ -41,7 +41,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/CMIservice/**",
 
                         "/agent/regiterNewUserAgent",
-                        "/client/regiterNewUserClient", "/user/**", "/client/uploadClientIdentities",
+                         "/user/**", "/client/uploadClientIdentities",
                         "/forgetPassword/**",
                         "/creditor/getAll")
 
