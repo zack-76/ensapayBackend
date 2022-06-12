@@ -109,8 +109,8 @@ public class ClientService {
     }
 
 
-    public Integer getSolde(Long clientId) {
-        return clientRepository.findClientSoldeByClientId(clientId);
+    public Integer getSolde(String username) {
+        return clientRepository.findClientSoldeByClientId(username);
     }
 
     public Client getClientProfile(String username) {

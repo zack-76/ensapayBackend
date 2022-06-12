@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -24,10 +25,11 @@ public class WebServiceController {
 
 
     @PostMapping("/getImpay/{username}/{reference}")
-    @PreAuthorize("hasRole('Client')")
-    public ResponseEntity<Integer> getImpay(@PathVariable("reference") String reference,@PathVariable("username") String username){
+  //  @PreAuthorize("hasRole('Client')")
+    public @ResponseBody
+    Map<String,String> getImpay(@PathVariable("reference") String reference, @PathVariable("username") String username){
         log.info("Impay pased to: "+reference);
-        return ResponseEntity.ok().body(webServiceCMI.getImpay(reference,username));
+        return webServiceCMI.getImpay(reference,username);
     }
 
     @GetMapping("/validateToken/{username}")
@@ -38,15 +40,18 @@ public class WebServiceController {
     }
 
     @PostMapping("/validatePayment/{username}")
-    @PreAuthorize("hasRole('Client')")
-    public ResponseEntity<String> validatePayment(@RequestBody ValidatePaymentDto validatePaymentDto,@PathVariable("username") String username)
-            throws MessagingException, UnsupportedEncodingException {
+    //@PreAuthorize("hasRole('Client')")
+    public ResponseEntity<String> validatePayment(@RequestBody ValidatePaymentDto validatePaymentDto,@PathVariable("username") String username) {
+        try {
             log.info("Payment validated");
-            return ResponseEntity.status(200).body(webServiceCMI.validate(validatePaymentDto,username));
+            return ResponseEntity.status(200).body(webServiceCMI.validate(validatePaymentDto, username));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("error");
+        }
     }
 
-    @GetMapping("/factures/{clientName}")
-    public ResponseEntity<List<Facture>> getAllFactures(@PathVariable("clientName") String clientName){
-        return ResponseEntity.status(200).body(webServiceCMI.getFacutreByClientName(clientName));
+    @GetMapping("/factures/{username}")
+    public ResponseEntity<List<Facture>> getAllFactures(@PathVariable("username") String username){
+        return ResponseEntity.status(200).body(webServiceCMI.getFacutreByClientName(username));
     }
 }

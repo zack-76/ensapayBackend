@@ -1,5 +1,6 @@
 package org.spring.ensapay.webservice;
 
+import net.bytebuddy.utility.RandomString;
 import org.spring.ensapay.dto.ValidatePaymentDto;
 import org.spring.ensapay.entity.Creditor;
 import org.spring.ensapay.entity.Facture;
@@ -50,7 +51,7 @@ public class WebServiceCMI {
         return validatePayment.getToken();
     }
 
-    public Integer getImpay(String reference,String username){
+    public Map<String,String> getImpay(String reference, String username){
 
         ValidatePayment validatePayment =  new ValidatePayment();
         validatePayment.setUsername(username);
@@ -63,9 +64,15 @@ public class WebServiceCMI {
         impays.put("5686CHILKO",200);
         impays.put("0671886710",250);
         impays.put("0758091080",100);
+        Map<String,String> ImpayQrCode=new HashMap<>() ;
 
-        return impays.entrySet().stream().filter(i -> reference.equals(i.getKey()))
+
+        int Impay= impays.entrySet().stream().filter(i -> reference.equals(i.getKey()))
                 .map(Map.Entry::getValue).findFirst().orElse(null);
+        ImpayQrCode.put("donnateur",this.clientRepository.findClientFirstNameByClientUserUsername(username));
+        ImpayQrCode.put("impay",Impay+"");
+        ImpayQrCode.put("QrCode", RandomString.make(4));
+        return  ImpayQrCode;
     }
 
     public String validate( ValidatePaymentDto validatePaymentDto,String username)
@@ -73,31 +80,28 @@ public class WebServiceCMI {
 
         ValidatePayment validatePayment = validatePaymentRepository.findById(username).get();
 
-        if(validatePaymentDto.getGeneratedToken() == validatePayment.getToken()){
+      //  if(validatePaymentDto.getGeneratedToken() == validatePayment.getToken()){}
             validatePaymentRepository.deleteById(username);
-            Integer clientSolde = clientRepository.findClientSoldeByClientId(validatePaymentDto.getClientId());
+            Integer clientSolde = clientRepository.findClientSoldeByClientId(username);
             if(clientSolde >= validatePaymentDto.getImpaye()){
 //                clientRepository.updateClientSoldeByClientId(clientSolde-=validatePaymentDto.getImpaye(),validatePaymentDto.getClientId());
-                addFacture(validatePaymentDto.getClientId(),
-                        validatePaymentDto.getCodeCreditor(),
-                        validatePaymentDto.getCodeDept(),validatePaymentDto.getImpaye());
-                sendValidateEmail(validatePaymentDto.getClientId());
+                addFacture(username,validatePaymentDto.getNameCreditor(),
+                        validatePaymentDto.getNameDept(),
+                        validatePaymentDto.getImpaye());
+              //  sendValidateEmail(validatePaymentDto.getClientId());
                 return "success";
-            }else
-                return "can't pursuite your operation your solde is lower the facture's debt";
-        }
-        return "Something went wrong!";
+            }else {throw new RuntimeException("error");}
+
+        //return "Something went wrong!";
     }
 
 
-    public void addFacture(Long clientId,String codeCreditor,String codeDept,Integer impayé){
+    public void addFacture(String username,String nameCreditor,String nameDebt,Integer impayé){
         Facture facture =  new Facture();
         facture.setReference( new Random().nextInt(999998+1)+100000);
-        String clientFullName = clientRepository.findClientFirstNameByClientId(clientId)+" "+clientRepository.findClientLastNameByClientId(clientId);
+        String clientFullName = clientRepository.findClientFirstNameByClientUserUsername(username)+" "+clientRepository.findClientLastNameByClientUserUsername(username);
         facture.setClientName(clientFullName);
-        String nameCreditor = creditorRepository.findCreditorNameByCodeCreditor(codeCreditor);
         facture.setCreditorName(nameCreditor);
-        String nameDebt = debtRepository.findDebtNameByCodeDebt(codeDept);
         facture.setDebtName(nameDebt);
         facture.setImpaye(impayé);
         factureRepository.save(facture);
@@ -109,7 +113,7 @@ public class WebServiceCMI {
     }
 
 
-    public void sendValidateEmail(Long id)
+    /*public void sendValidateEmail(Long id)
             throws MessagingException, UnsupportedEncodingException {
 
         MimeMessage message = mailSender.createMimeMessage();
@@ -131,9 +135,9 @@ public class WebServiceCMI {
         helper.setText(content,true );
 
         mailSender.send(message);
-    }
-
-    public List<Facture> getFacutreByClientName(String clientName){
+    }!*/
+    public List<Facture> getFacutreByClientName(String username){
+        String clientName = clientRepository.findClientFirstNameByClientUserUsername(username)+" "+clientRepository.findClientLastNameByClientUserUsername(username);
         return factureRepository.findByClientName(clientName);
     }
 }

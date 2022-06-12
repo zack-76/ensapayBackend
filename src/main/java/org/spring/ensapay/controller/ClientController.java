@@ -61,11 +61,11 @@ public class ClientController {
 
     }
 
-    @GetMapping("/client/solde/{clientId}")
+    @GetMapping("/client/solde/{username}")
     @PreAuthorize("hasRole('Client')")
-    public ResponseEntity<Integer> ClientSolde(@PathVariable("clientId") Long clientId){
-        log.info("client"+clientId+" has got he's Solde");
-        return ResponseEntity.ok().body(clientService.getSolde(clientId));
+    public ResponseEntity<Integer> ClientSolde(@PathVariable("username") String username){
+        log.info("client"+username+" has got he's Solde");
+        return ResponseEntity.ok().body(clientService.getSolde(username));
     }
 
     @GetMapping("/profileClient/{username}")

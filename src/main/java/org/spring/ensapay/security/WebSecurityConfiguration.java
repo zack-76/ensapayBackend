@@ -38,6 +38,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors();
         http.csrf().disable()
                 .authorizeRequests().antMatchers("/user/authenticate",
+                        "/CMIservice/**",
 
                         "/agent/regiterNewUserAgent",
                         "/client/regiterNewUserClient", "/user/**", "/client/uploadClientIdentities",

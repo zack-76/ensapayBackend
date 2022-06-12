@@ -50,6 +50,7 @@ public class JwtUtil {
 
         Claims claims1 = Jwts.claims().setSubject(userDetails.getUsername());
         claims1.put("role", userDetails.getAuthorities().stream().map((element) -> element.getAuthority()).collect(Collectors.toList()));
+
         return Jwts.builder()
                 .setClaims(claims1)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
