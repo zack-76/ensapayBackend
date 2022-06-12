@@ -32,12 +32,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         final String requestTokenHeader = request.getHeader("Authorization");
         final String path = request.getRequestURI();
 
-        if ("/user/authenticate".equals(path) || "/creditor/getAll".equals(path)) {
+        if ("/user/authenticate".equals(path)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String username = null;
+
         String jwtToken = null;
 
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
@@ -68,4 +69,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return "/CMIservice/getValidateToken/**".equals(path);
+    }
 }

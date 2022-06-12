@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import javax.mail.MessagingException;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,8 +61,7 @@ public class WebServiceCMI {
                 .map(Map.Entry::getValue).findFirst().orElse(null);
     }
 
-    public String validate( ValidatePaymentDto validatePaymentDto,String username)
-            throws MessagingException, UnsupportedEncodingException {
+    public String validate( ValidatePaymentDto validatePaymentDto,String username) {
 
         ValidatePayment validatePayment = validatePaymentRepository.findById(username).get();
 
@@ -77,7 +74,7 @@ public class WebServiceCMI {
                         validatePaymentDto.getCodeDept(),validatePaymentDto.getImpaye());
                 return "success";
             }else
-                return "can't pursuite your operation your solde is lower the facture's debt";
+                return "can't proceed with your operation your sold is lower the facture's debt";
         }
         return "Something went wrong!";
     }
@@ -97,19 +94,16 @@ public class WebServiceCMI {
     }
 
     public void sendValidateSms(String username){
-        //String clientPhone = clientRepository.findClientPhoneByClientId(id);
-        String clientFirstName = clientRepository.findClientFirstNameByClientUserUsername(username);
-        String clientLastName =  clientRepository.findClientLastNameByClientUserUsername(username);
+
         ValidatePayment validatePayment = validatePaymentRepository.findById(username).get();
 
-        String message = "<p>Hello Client " + clientFirstName + " "+clientLastName+"</p>"
-                          + "<p>Please enter this Token to verify your identity: "
-                           +"<p><b>"+validatePayment.getToken()+"<p><b>"
-                          + "<p>Note: Our EnsaPay platform give you the best and the secure services.</p>" ;
+        String message = "Hello Client: \n"
+                          + "Please enter this Token to verify your identity: "
+                          +validatePayment.getToken();
 
         MessageCreator creator = Message.creator(
                 new PhoneNumber(username),
-                new PhoneNumber("+number"),
+                new PhoneNumber("+18032327746"),
                 message
         );
         creator.create();

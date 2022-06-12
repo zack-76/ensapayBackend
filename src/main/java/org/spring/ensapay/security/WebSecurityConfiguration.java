@@ -38,7 +38,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers( "/user/authenticate",
                                                     "/creditor/getAll")
                 .permitAll()
-                .antMatchers(HttpHeaders.ALLOW).permitAll()
+                .antMatchers("/CMIservice/getValidateToken/**")
+                .permitAll()
+                .antMatchers(HttpHeaders.ALLOW)
+                .permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)

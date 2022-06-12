@@ -21,7 +21,7 @@ public class ClientDto {
     private String clientLastName;
     @NotBlank(message = "Phone is required")
     @Size(min = 10,max = 25)
-    @Pattern(regexp = "^[0-9]+[0-9]$")
+    @Pattern(regexp = "^+212[0-9]+[0-9]$")
     private String clientPhone;
     @NotBlank(message = "Address is required")
     private String clientAddress;
@@ -35,5 +35,4 @@ public class ClientDto {
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be Valid")
     private String clientEmail;
-
 }

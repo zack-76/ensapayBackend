@@ -31,11 +31,11 @@ public class WebServiceController {
     }
 
     @GetMapping("/getValidateToken/{username}")
-    @PreAuthorize("hasRole('Client')")
+    //@PreAuthorize("hasRole('Client')")
     public ResponseEntity<String> getValidateSms(@PathVariable("username") String username){
-        log.info("Validate token pased in SMS to: "+username);
         try{
             webServiceCMI.sendValidateSms(username);
+            log.info("Validate token pased in SMS to: "+username);
             return ResponseEntity.ok().body("We have sent you an SMS to identify you! ");
         }catch (Exception e){
             return ResponseEntity.status(401).body("Something went wrowng");
@@ -48,6 +48,7 @@ public class WebServiceController {
         log.info("Validate Token passed to the Client "+validatePayment.getUsername());
         return  ResponseEntity.ok().body(webServiceCMI.validateToken(validatePayment));
     }
+
 
     @PostMapping("/validatePayment/{username}")
     @PreAuthorize("hasRole('Client')")
