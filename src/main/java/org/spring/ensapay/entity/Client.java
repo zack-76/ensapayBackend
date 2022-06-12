@@ -26,7 +26,7 @@ public class Client {
     private String clientPhone;
     @Column(nullable = false)
     private String clientAddress;
-    @Column(nullable = false,length = 10,name="client_cin")
+    @Column(nullable = false,name="client_cin")
     private String clientCIN;
     @Column(nullable = false)
     private Integer clientSolde;
