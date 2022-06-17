@@ -36,8 +36,8 @@ public class ClientDto {
     @NotBlank(message = "City is required")
     private String clientCity;
     @NotBlank(message = "Zip code is required")
-    @Size(min = 4,max = 6)
-    @Pattern(regexp = "^[0-9]+$")
+    //@Size(min = 4,max = 6)
+    //@Pattern(regexp = "^[0-9]+$")
     private String clientZip;
     @NotBlank(message = "Country code is required")
     private String clientCountry;

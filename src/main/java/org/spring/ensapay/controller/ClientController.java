@@ -45,19 +45,23 @@ public class ClientController {
                                                        @RequestParam(name = "Zip") String zip,
                                                        @RequestParam(name = "Country") String country)
             throws MessagingException, UnsupportedEncodingException {
-        ClientDto clientDto = new ClientDto(firstName, lastName, phone, cin, address, solde, email, city, zip, country);
         try {
-            Arrays.asList(identities).stream().forEach(file -> {
-                clientService.save(file);
+            ClientDto clientDto = new ClientDto(firstName, lastName, phone, cin, address, solde, email, city, zip, country);
+            try {
+                Arrays.asList(identities).stream().forEach(file -> {
+                    clientService.save(file);
 
-                log.info("Agent Identities has successfully stored");
-            });
-        } catch (Exception e) {
-            log.warn("could't not store identites", e);
+                    log.info("Agent Identities has successfully stored");
+                });
+            } catch (Exception e) {
+                log.warn("could't not store identites", e);
+            }
+            clientService.registerNewUserClient(clientDto);
+            log.info("Client" + clientDto.getClientFirstName() + " " + clientDto.getClientLastName() + "added successfully ");
+            return ResponseEntity.status(HttpStatus.OK).body("client added");
+        }catch (Exception e){
+           return ResponseEntity.status(400).body("please try later");
         }
-        clientService.registerNewUserClient(clientDto);
-        log.info("Client" + clientDto.getClientFirstName() + " " + clientDto.getClientLastName() + "added successfully ");
-        return ResponseEntity.status(HttpStatus.OK).body("client added");
 
     }
 
