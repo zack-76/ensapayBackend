@@ -21,6 +21,8 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.util.Date;
 
 @Transactional
 @Service
@@ -46,8 +48,8 @@ public class ClientService {
         String encodedPassword = passwordEncoder.encode(generatedPassword);
 
         Client client = new Client();
-        client.setClientFirstName(newClient.getClientFirstName());
-        client.setClientLastName(newClient.getClientLastName());
+        client.setClientFullName(newClient.getClientFirstName()+" "+newClient.getClientLastName());
+
         client.setClientCIN(newClient.getClientCIN());
         client.setClientEmail(newClient.getClientEmail());
         client.setClientSolde(newClient.getClientSolde());
@@ -57,6 +59,7 @@ public class ClientService {
         client.setClientZip(newClient.getClientZip());
         client.setClientPhone(newClient.getClientPhone());
         client.setFirstConnection(true);
+        client.setIdAgent(newClient.getIdAgent());
         User clientUser = new User();
         clientUser.setUsername(newClient.getClientPhone());
         clientUser.setRoleName("Client");
@@ -64,8 +67,9 @@ public class ClientService {
         client.setClientUser(clientUser);
 
         clientRepository.save(client);
-
         //sendClientEmail(newClient,generatedPassword);
+
+
 
         return "Client successfully added";
     }
@@ -102,7 +106,10 @@ public class ClientService {
 
     public void save(MultipartFile file) {
         try {
-            Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
+            Timestamp timestamps =  new Timestamp(new Date().getTime());
+            String unique_number =String.valueOf(timestamps.getTime());
+            String fileName = unique_number+"_"+file.getOriginalFilename();
+            Files.copy(file.getInputStream(), this.root.resolve(fileName));
         } catch (Exception e) {
             throw new RuntimeException("Could not store the identities. Error: " + e.getMessage());
         }

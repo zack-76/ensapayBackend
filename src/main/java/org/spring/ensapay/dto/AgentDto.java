@@ -41,4 +41,9 @@ public class AgentDto {
     private String agentZip;
     @NotBlank(message = "Country code is required")
     private String agentCountry;
+    @NotBlank(message = "Username is required")
+    @Email(message = "username should be Valid")
+    private String username;
+
+    private Long idBackOffice;
 }

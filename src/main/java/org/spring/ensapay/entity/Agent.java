@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 
 @Entity
@@ -20,9 +21,8 @@ public class Agent {
     @Column(nullable = false,length = 25)
     private String agentPhone;
     @Column(nullable = false,length = 20)
-    private String agentFirstName;
-    @Column(nullable = false,length = 20)
-    private String agentLastName;
+    private String agentFullName;
+
     @Column(nullable = false)
     private String agentAddress;
     @Column(nullable = false,length = 20,name="agent_cin")
@@ -35,6 +35,7 @@ public class Agent {
     private String agentZip;
     @Column(nullable = false,length=100)
     private String agentCountry;
+    private Long idbackOffice;
 
     private boolean firstConnection;
 
@@ -42,4 +43,6 @@ public class Agent {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     User agentUser;
+
+
 }

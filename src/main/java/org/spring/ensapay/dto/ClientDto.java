@@ -41,4 +41,6 @@ public class ClientDto {
     private String clientZip;
     @NotBlank(message = "Country code is required")
     private String clientCountry;
+
+    private Long idAgent;
 }

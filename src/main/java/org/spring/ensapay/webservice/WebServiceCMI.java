@@ -69,7 +69,7 @@ public class WebServiceCMI {
 
         int Impay= impays.entrySet().stream().filter(i -> reference.equals(i.getKey()))
                 .map(Map.Entry::getValue).findFirst().orElse(null);
-        ImpayQrCode.put("donnateur",this.clientRepository.findClientFirstNameByClientUserUsername(username));
+        ImpayQrCode.put("donnateur",this.clientRepository.findClientFullNameByClientUserUsername(username));
         ImpayQrCode.put("impay",Impay+"");
         ImpayQrCode.put("QrCode", RandomString.make(4));
         return  ImpayQrCode;
@@ -99,7 +99,7 @@ public class WebServiceCMI {
     public void addFacture(String username,String nameCreditor,String nameDebt,Integer impayé){
         Facture facture =  new Facture();
         facture.setReference( new Random().nextInt(999998+1)+100000);
-        String clientFullName = clientRepository.findClientFirstNameByClientUserUsername(username)+" "+clientRepository.findClientLastNameByClientUserUsername(username);
+        String clientFullName = clientRepository.findClientFullNameByClientUserUsername(username);
         facture.setNumeroClient(username);
         facture.setClientName(clientFullName);
         facture.setCreditorName(nameCreditor);

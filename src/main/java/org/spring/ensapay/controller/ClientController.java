@@ -31,7 +31,7 @@ public class ClientController {
     private UserService userService;
 
 
-    @PostMapping("/regiterNewUserClient")
+    @PostMapping("/regiterNewUserClient/{id}")
     @PreAuthorize("hasRole('Agent')")
     public ResponseEntity<String> uploadClientIdentity(@RequestParam(name = "file") MultipartFile[] identities,
                                                        @RequestParam(name = "email") String email,
@@ -43,27 +43,30 @@ public class ClientController {
                                                        @RequestParam(name = "Phone") String phone,
                                                        @RequestParam(name = "City") String city,
                                                        @RequestParam(name = "Zip") String zip,
-                                                       @RequestParam(name = "Country") String country)
+                                                       @RequestParam(name = "Country") String country,
+                                                       @PathVariable(value = "id") Long id)
             throws MessagingException, UnsupportedEncodingException {
         try {
-            ClientDto clientDto = new ClientDto(firstName, lastName, phone, cin, address, solde, email, city, zip, country);
-            try {
-                Arrays.asList(identities).stream().forEach(file -> {
-                    clientService.save(file);
+            ClientDto clientDto = new ClientDto(firstName, lastName, phone, cin, address, solde, email, city, zip, country,id);
 
-                    log.info("Agent Identities has successfully stored");
-                });
-            } catch (Exception e) {
-                log.warn("could't not store identites", e);
-            }
             clientService.registerNewUserClient(clientDto);
             log.info("Client" + clientDto.getClientFirstName() + " " + clientDto.getClientLastName() + "added successfully ");
+
+            Arrays.asList(identities).stream().forEach(file -> {
+                clientService.save(file);
+
+                log.info("Agent Identities has successfully stored");
+            });
             return ResponseEntity.status(HttpStatus.OK).body("client added");
-        }catch (Exception e){
-           return ResponseEntity.status(400).body("please try later");
+
+        } catch (Exception e) {
+            log.warn("could't not store identites", e);
+            return ResponseEntity.status(400).body("please try later");
         }
 
     }
+
+
 
     @GetMapping("/client/solde/{username}")
     @PreAuthorize("hasRole('Client')")

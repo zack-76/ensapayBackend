@@ -19,9 +19,8 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clientId;
     @Column(nullable = false,length = 25)
-    private String clientFirstName;
-    @Column(nullable = false,length = 25)
-    private String clientLastName;
+    private String clientFullName;
+
     @Column(nullable = false,length = 10)
     private String clientPhone;
     @Column(nullable = false)
@@ -38,11 +37,14 @@ public class Client {
     private String ClientZip;
     @Column(nullable = false,length=100)
     private String ClientCountry;
+    private Long idAgent;
 
     private boolean firstConnection;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     User clientUser;
+
+
 
 }

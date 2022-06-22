@@ -39,6 +39,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests().antMatchers("/user/authenticate",
                         "/CMIservice/**",
+                        "/contactUs",
 
                         "/agent/regiterNewUserAgent",
                          "/user/**", "/client/uploadClientIdentities",
