@@ -24,10 +24,10 @@ public class BackofficeController {
     @Autowired
     private UserService userService;
 
-   //@PostConstruct
-    //public void initRoleAndUser() {
-      //  backofficeService.initBackoffice();
-    //}
+    @PostConstruct
+    public void initRoleAndUser() {
+        backofficeService.initBackoffice();
+    }
 
 
     @GetMapping("/forBackoffice")

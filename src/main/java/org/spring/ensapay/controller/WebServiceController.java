@@ -20,6 +20,7 @@ import java.util.Map;
 @RequestMapping("/CMIservice")
 public class WebServiceController {
 
+
     @Autowired
     private WebServiceCMI webServiceCMI;
 
@@ -34,7 +35,7 @@ public class WebServiceController {
 
     @GetMapping("/validateToken/{username}")
     @PreAuthorize("hasRole('Client')")
-    public ResponseEntity<Integer> getValidateToken(@PathVariable("username") String username){
+    public ResponseEntity<String> getValidateToken(@PathVariable("username") String username){
         log.info("Validate Token passed to the Client "+username);
         return  ResponseEntity.ok().body(webServiceCMI.sendValidatetoken(username));
     }
@@ -48,6 +49,32 @@ public class WebServiceController {
         } catch (Exception e) {
             return ResponseEntity.status(400).body("error");
         }
+    }
+    @GetMapping("/getValidateToken/{username}")
+    //@PreAuthorize("hasRole('Client')")
+    public ResponseEntity<String> getValidateSms(@PathVariable("username") String username){
+        try{
+            webServiceCMI.sendValidateSms(username);
+            log.info("Validate token pased in SMS to: "+username);
+            return ResponseEntity.ok().body("We have sent you an SMS to identify you! ");
+        }catch (Exception e){
+            return ResponseEntity.status(401).body("Something went wrong");
+        }
+    }
+
+    @PostMapping("/validateToken/{token}/{username}")
+    public ResponseEntity<String> validateToken(@PathVariable("username") String username,@PathVariable("token") String token){
+           try{
+               System.out.println(token);
+               System.out.println(username);
+               webServiceCMI.validateToken(username,token);
+               return ResponseEntity.ok().body("next");
+
+           }catch (Exception e){
+               return ResponseEntity.status(400).body("echec");
+           }
+
+
     }
 
     @GetMapping("/factures/{username}")

@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ValidatePaymentRepository extends JpaRepository<ValidatePayment,String> {
 
-    Optional<ValidatePayment> findById(String username);
+    ValidatePayment findByUsername(String username);
 }

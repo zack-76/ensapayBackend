@@ -25,7 +25,7 @@ public class Client {
     private String clientPhone;
     @Column(nullable = false)
     private String clientAddress;
-    @Column(nullable = false,length = 10,name="client_cin")
+    @Column(nullable = false,length = 20)
     private String clientCIN;
     @Column(nullable = false)
     private Integer clientSolde;
@@ -42,7 +42,6 @@ public class Client {
     private boolean firstConnection;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     User clientUser;
 
 

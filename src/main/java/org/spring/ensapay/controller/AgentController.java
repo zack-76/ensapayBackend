@@ -32,10 +32,10 @@ public class AgentController {
     @Autowired
     private UserService userService;
 
-  //  @PostConstruct
-    //public void initAgent() {
-      //  agentService.initAgent();
-    //}
+    @PostConstruct
+    public void initAgent() {
+        agentService.initAgent();
+    }
 
 
     @PostMapping("/regiterNewUserAgent/{id}")

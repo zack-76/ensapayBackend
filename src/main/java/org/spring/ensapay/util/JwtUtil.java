@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "zakaria_yessine_ashraf_GI4";
+    private static final String SECRET_KEY = "zakariayessineashrafGI4JHSFJOLHVOSNFKLNWSHFNSJKHSKBFJKSJKBVJKWSHFJKLWSKDVHKWBDFJKVWJKSVJKWKSVJKWBJKVJKWBVBKWSBVJKWUIVJKWBVJKWBJKVWJKHVKWJKHVWXBVWKVJKWXBVJKBWBVWSJBVKWXHVJKWVNWJV";
 
     private static final int TOKEN_VALIDITY = 3600 * 5 * 24;
 

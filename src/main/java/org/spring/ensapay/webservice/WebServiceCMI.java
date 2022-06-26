@@ -1,5 +1,9 @@
 package org.spring.ensapay.webservice;
 
+import com.vonage.client.VonageClient;
+import com.vonage.client.sms.MessageStatus;
+import com.vonage.client.sms.SmsSubmissionResponse;
+import com.vonage.client.sms.messages.TextMessage;
 import net.bytebuddy.utility.RandomString;
 import org.spring.ensapay.dto.ValidatePaymentDto;
 import org.spring.ensapay.entity.Creditor;
@@ -19,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @Transactional
@@ -46,7 +51,7 @@ public class WebServiceCMI {
     private FactureRepository factureRepository;
 
 
-    public Integer sendValidatetoken(String username) {
+    public String sendValidatetoken(String username) {
         ValidatePayment validatePayment = validatePaymentRepository.findById(username).get();
         return validatePayment.getToken();
     }
@@ -55,7 +60,7 @@ public class WebServiceCMI {
 
         ValidatePayment validatePayment =  new ValidatePayment();
         validatePayment.setUsername(username);
-        validatePayment.setToken(new Random().nextInt(999998 + 1)  + 100000);
+        validatePayment.setToken(RandomString.make(6));
         validatePaymentRepository.save(validatePayment);
 
         Map<String,Integer> impays = new HashMap<>();
@@ -75,24 +80,17 @@ public class WebServiceCMI {
         return  ImpayQrCode;
     }
 
-    public String validate( ValidatePaymentDto validatePaymentDto,String username)
-            throws MessagingException, UnsupportedEncodingException {
+    public String validate( ValidatePaymentDto validatePaymentDto,String username) {
 
-        ValidatePayment validatePayment = validatePaymentRepository.findById(username).get();
-
-      //  if(validatePaymentDto.getGeneratedToken() == validatePayment.getToken()){}
-            validatePaymentRepository.deleteById(username);
             Integer clientSolde = clientRepository.findClientSoldeByClientId(username);
             if(clientSolde >= validatePaymentDto.getImpaye()){
            clientRepository.updateClientSoldeByClientId(clientSolde-=validatePaymentDto.getImpaye(),username);
                 addFacture(username,validatePaymentDto.getNameCreditor(),
                         validatePaymentDto.getNameDept(),
                         validatePaymentDto.getImpaye());
-              //  sendValidateEmail(validatePaymentDto.getClientId());
                 return "success";
             }else {throw new RuntimeException("error");}
 
-        //return "Something went wrong!";
     }
 
 
@@ -108,35 +106,38 @@ public class WebServiceCMI {
         factureRepository.save(facture);
     }
 
+    public void sendValidateSms(String username){
+
+        ValidatePayment validatePayment = validatePaymentRepository.findById(username).get();
+
+        String message = "Hello Client: \n"
+                + "Please enter this Token to verify your identity: "
+                +validatePayment.getToken();
+
+        TextMessage msg = new TextMessage("Ensa Pay Service",
+                "+212"+username.substring(1),
+                message
+        );
+
+        VonageClient client =
+                VonageClient.builder().apiKey("cb282c90").apiSecret("zVM3NTagQbOITp83").build();
+
+        SmsSubmissionResponse response = client.getSmsClient().submitMessage(msg);
+
+        if (response.getMessages().get(0).getStatus() == MessageStatus.OK) {
+            System.out.println("Message sent successfully.");
+        } else {
+            System.out.println("Message failed with error: " + response.getMessages().get(0).getErrorText());
+        }
+
+    }
+
 
     public List<Facture> getFactures(){
         return factureRepository.findAll();
     }
 
 
-    /*public void sendValidateEmail(Long id)
-            throws MessagingException, UnsupportedEncodingException {
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message,true);
-
-        helper.setFrom("ensapay_2022@outlook.com");
-        String clientEmail =  clientRepository.findClientEmailByClientId(id);
-        String clientFirstName = clientRepository.findClientFirstNameByClientId(id);
-        String clientLastName =  clientRepository.findClientLastNameByClientId(id);
-        helper.setTo(clientEmail);
-
-        String subject = "Payment success";
-        String content = "<p>Hello Client " + clientFirstName + " "+clientLastName+"</p>"
-                + "<p>Your Payment has been with succes"
-                + "<p>Note: Our EnsaPay platform give you the best and the secure services.</p>";
-
-        helper.setSubject(subject);
-
-        helper.setText(content,true );
-
-        mailSender.send(message);
-    }!*/
     public List<Facture> getFacutreByClientName(String username){
 
         return factureRepository.findByNumeroClient(username);
@@ -145,5 +146,17 @@ public class WebServiceCMI {
     public List<Facture> getFacutreByClientNameCreditor(String username, String creditor) {
 
         return factureRepository.findByClientNameAndCreditorName(username,creditor);
+    }
+
+    public void validateToken(String username, String token) throws Exception {
+        ValidatePayment validatePayment = validatePaymentRepository.findByUsername(username);
+
+        if(token.equals(validatePayment.getToken())){
+            validatePaymentRepository.deleteById(username);
+
+        }else{
+            throw new Exception();
+        }
+
     }
 }
