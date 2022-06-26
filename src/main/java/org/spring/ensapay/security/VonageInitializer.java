@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 public class VonageInitializer {
 
     public VonageInitializer(){
-        VonageClient client =
-                VonageClient.builder().apiKey("cb282c90").apiSecret("zVM3NTagQbOITp83").build();
+        VonageClient client = VonageClient.builder().
+                apiKey("7f7f3557").apiSecret("Ucfjbo05oUzdl9C5").build();
         log.info("Vonage initialized");
     }
 }

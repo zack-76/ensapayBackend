@@ -34,10 +34,6 @@ public class AgentController {
 
 
 
-   @PostConstruct
-    public void initAgent() {
-        agentService.initAgent();
-    }
 
 
 

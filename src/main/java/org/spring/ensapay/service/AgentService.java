@@ -109,28 +109,6 @@ public class AgentService {
     }
 
 
-    public void initAgent() {
-
-        Agent agent = new Agent();
-        agent.setAgentFullName("yessine jaoua");
-
-        agent.setAgentAddress("Tunis");
-        agent.setAgentPhone("O671");
-        agent.setAgentCIN("BG7865");
-        agent.setAgentEmail("zessabri80@gmail.com");
-        agent.setFirstConnection(true);
-        agent.setAgentZip("20520");
-        agent.setAgentCountry("Morocco");
-        agent.setAgentCity("Casablanca");
-        User agentUser = new User();
-        agentUser.setUsername("agent1");
-        agentUser.setUserPassword(passwordEncoder.encode("12345678"));
-        agentUser.setRoleName("Agent");
-        agent.setAgentUser(agentUser);
-
-        agentRepository.save(agent);
-
-    }
 
 
     public void save(MultipartFile file) {
