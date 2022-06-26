@@ -11,6 +11,7 @@
 	<groupId>org.spring</groupId>
 	<artifactId>ensapay</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>ensapay</name>
 	<description>backEnd for our E-banking App</description>
 	<properties>
