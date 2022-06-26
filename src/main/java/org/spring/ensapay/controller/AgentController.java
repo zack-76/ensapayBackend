@@ -33,10 +33,12 @@ public class AgentController {
     private UserService userService;
 
 
-  //  @PostConstruct
-    //public void initAgent() {
-      //  agentService.initAgent();
-    //}
+
+   @PostConstruct
+    public void initAgent() {
+        agentService.initAgent();
+    }
+
 
 
 
@@ -58,19 +60,22 @@ public class AgentController {
             throws Exception {
 
         @Valid AgentDto agentDto = new AgentDto(agentPhone, agentFirstName, agentLastName, agentAddress, agentCIN, agentEmail, agentCity, agentZip, agentCountry, agenusername,id);
+try{
+        Arrays.asList(identities).stream().forEach(file -> {
+            agentService.save(file);
 
-        try {
-            agentService.registerNewUserAgent(agentDto);
-            Arrays.asList(identities).stream().forEach(file -> {
-                agentService.save(file);
-            });
-            log.info("Agent" + agentDto.getAgentFirstName() + " " + agentDto.getAgentLastName() + "successfully added");
-            return ResponseEntity.status(HttpStatus.OK).body("added");
+            log.info("Agent Identities has successfully stored");
+        });
+        agentService.registerNewUserAgent(agentDto);
+        log.info("Client" + agentDto.getUsername() + " " + agentDto.getAgentLastName() + "added successfully ");
 
-        } catch (Exception e) {
-            log.warn("could't not store identites", e);
-           return ResponseEntity.status(400).body(e.getMessage());
-        }
+
+        return ResponseEntity.status(HttpStatus.OK).body("client added");
+
+    } catch (Exception e) {
+        log.warn("could't not store identites", e);
+        return ResponseEntity.status(400).body("please try later");
+    }
 
     }
 

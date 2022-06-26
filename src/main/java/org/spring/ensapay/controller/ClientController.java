@@ -48,15 +48,15 @@ public class ClientController {
             throws MessagingException, UnsupportedEncodingException {
         try {
             ClientDto clientDto = new ClientDto(firstName, lastName, phone, cin, address, solde, email, city, zip, country,id);
-
-            clientService.registerNewUserClient(clientDto);
-            log.info("Client" + clientDto.getClientFirstName() + " " + clientDto.getClientLastName() + "added successfully ");
-
             Arrays.asList(identities).stream().forEach(file -> {
                 clientService.save(file);
 
                 log.info("Agent Identities has successfully stored");
             });
+            clientService.registerNewUserClient(clientDto);
+            log.info("Client" + clientDto.getClientFirstName() + " " + clientDto.getClientLastName() + "added successfully ");
+
+
             return ResponseEntity.status(HttpStatus.OK).body("client added");
 
         } catch (Exception e) {

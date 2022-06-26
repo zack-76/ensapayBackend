@@ -45,6 +45,20 @@ public class ContactUs {
         return this.contactUsService.Contact_affiche_to_agent(id,phone);
 
     }
+    @PostMapping("/deleteMessageClient/{id}")
+    @PreAuthorize("hasRole('Agent')")
+    public ResponseEntity<String> deleteMessageClient(@PathVariable("id") Long id){
+
+        try {
+            this.contactUsService.deleteMessageClients(id);
+            return ResponseEntity.ok().body("Message deleted");
+        }catch (Exception e){
+            return ResponseEntity.status(400).body("cannot delete Message");
+        }
+
+
+
+    }
 
 
 }

@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Transactional
@@ -60,14 +61,15 @@ public class ClientService {
         client.setClientPhone(newClient.getClientPhone());
         client.setFirstConnection(true);
         client.setIdAgent(newClient.getIdAgent());
+        client.setCreationDate(LocalDateTime.now());
         User clientUser = new User();
         clientUser.setUsername(newClient.getClientPhone());
         clientUser.setRoleName("Client");
-        clientUser.setUserPassword(passwordEncoder.encode("12345678"));
+        clientUser.setUserPassword(passwordEncoder.encode(encodedPassword));
         client.setClientUser(clientUser);
 
         clientRepository.save(client);
-        //sendClientEmail(newClient,generatedPassword);
+        sendClientEmail(newClient,generatedPassword);
 
 
 

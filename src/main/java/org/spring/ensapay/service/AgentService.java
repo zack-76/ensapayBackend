@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class AgentService {
 
         String generatedPassword = RandomString.make(8);
         if(this.agentRepository.findAgentByIdentifiant(newAgent.getUsername())!=null){
-            System.out.println("eeeerrrrrrrrrrr");
+
             throw new Exception("username already exits");
         }
         else {
@@ -67,6 +68,7 @@ public class AgentService {
             agent.setAgentCountry(newAgent.getAgentCountry());
             agent.setIdbackOffice(newAgent.getIdBackOffice());
             agent.setFirstConnection(true);
+            agent.setCreationDate(LocalDateTime.now());
             User agentUser = new User();
             agentUser.setRoleName("Agent");
             agentUser.setUsername(newAgent.getUsername());
@@ -74,7 +76,7 @@ public class AgentService {
             agent.setAgentUser(agentUser);
 
             agentRepository.save(agent);
-            //sendAgentEmail(newAgent, generatedPassword);
+            sendAgentEmail(newAgent, generatedPassword);
 
 
         }
@@ -137,7 +139,6 @@ public class AgentService {
             String unique_number =String.valueOf(timestamps.getTime());
             String fileName = unique_number+"_"+file.getOriginalFilename();
             Files.copy(file.getInputStream(), this.root.resolve(fileName));
-
         } catch (Exception e) {
             throw new RuntimeException("Could not store the identities. Error: " + e.getMessage());
         }

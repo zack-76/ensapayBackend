@@ -40,7 +40,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/user/authenticate",
                         "/CMIservice/**",
                         "/contactUs",
-
+                        "/CMIservice/getValidateToken/**",
                         "/agent/regiterNewUserAgent",
                          "/user/**", "/client/uploadClientIdentities",
                         "/forgetPassword/**",

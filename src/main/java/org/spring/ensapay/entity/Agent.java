@@ -3,10 +3,13 @@ package org.spring.ensapay.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -36,12 +39,17 @@ public class Agent {
     @Column(nullable = false,length=100)
     private String agentCountry;
     private Long idbackOffice;
+    @CreatedDate
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+    private LocalDateTime creationDate;
 
     private boolean firstConnection;
 
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
     //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+
     User agentUser;
 
 

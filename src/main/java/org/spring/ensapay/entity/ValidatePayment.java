@@ -20,5 +20,5 @@ public class ValidatePayment {
     @Size(min = 10, message = "The Password Should be greater then 8 characters")
     private String username;
    // @NotBlank(message = "token is required")
-    private Integer token;
+    private String token;
 }
