@@ -11,4 +11,6 @@ public interface BackofficeRepository extends JpaRepository<Backoffice,Long> {
     Backoffice findBackOfficeByIdentifiant (@Param(value = "username") String username);
 
     //Backoffice findByBackofficeUser(String usename);
+    @Query(value="SELECT b FROM Backoffice b  WHERE b.backofficeUser.username=:username")
+    Backoffice findAgentByIdentifiant (@Param(value = "username") String username);
 }

@@ -49,6 +49,7 @@ public class BackofficeService {
 
     }
 
+
     public Backoffice getBacckOfficeProfile(String username) {
         return this.backofficeRepository.findBackOfficeByIdentifiant(username);
     }
@@ -58,5 +59,6 @@ public class BackofficeService {
     }
     public List<Agent> getAgents(Long id,String name) {
         return  this.agentRepository.findByIdbackOfficeAndname(id,name);
+
     }
 }

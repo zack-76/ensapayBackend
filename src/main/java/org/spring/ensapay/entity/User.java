@@ -28,7 +28,7 @@ public class User {
 
 
 
-
+/*
     @OneToOne(mappedBy = "agentUser",cascade = CascadeType.ALL)
     private Agent agent;
 
@@ -37,5 +37,8 @@ public class User {
 
     @OneToOne(mappedBy = "backofficeUser",cascade = CascadeType.ALL)
     private Backoffice backoffice;
+
+
+ */
 
 }

@@ -32,14 +32,17 @@ public class AgentController {
     @Autowired
     private UserService userService;
 
+
   //  @PostConstruct
     //public void initAgent() {
       //  agentService.initAgent();
     //}
 
 
+
     @PostMapping("/regiterNewUserAgent/{id}")
     @PreAuthorize("hasRole('Backoffice')")
+
     public ResponseEntity<String> regiterNewUserAgent(@RequestParam("file") MultipartFile[] identities,
                                                       @RequestParam("agentPhone") String agentPhone,
                                                       @RequestParam("agentFirstName") String agentFirstName,
@@ -55,6 +58,7 @@ public class AgentController {
             throws Exception {
 
         @Valid AgentDto agentDto = new AgentDto(agentPhone, agentFirstName, agentLastName, agentAddress, agentCIN, agentEmail, agentCity, agentZip, agentCountry, agenusername,id);
+
         try {
             agentService.registerNewUserAgent(agentDto);
             Arrays.asList(identities).stream().forEach(file -> {

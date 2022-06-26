@@ -44,7 +44,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/agent/regiterNewUserAgent",
                          "/user/**", "/client/uploadClientIdentities",
                         "/forgetPassword/**",
-                        "/creditor/getAll")
+                        "/creditor/getAll","/backoffice/**")
 
                 .permitAll()
                 .antMatchers(HttpHeaders.ALLOW).permitAll()

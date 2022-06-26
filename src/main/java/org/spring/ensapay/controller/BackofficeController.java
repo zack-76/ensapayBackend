@@ -2,8 +2,7 @@ package org.spring.ensapay.controller;
 
 import org.spring.ensapay.entity.Agent;
 import org.spring.ensapay.entity.Backoffice;
-import org.spring.ensapay.entity.Client;
-import org.spring.ensapay.entity.Facture;
+
 import org.spring.ensapay.service.BackofficeService;
 import org.spring.ensapay.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ public class BackofficeController {
     @Autowired
     private BackofficeService backofficeService;
 
+
     @Autowired
     private UserService userService;
 
@@ -28,6 +28,13 @@ public class BackofficeController {
     //public void initRoleAndUser() {
       //  backofficeService.initBackoffice();
     //}
+
+      @PostConstruct
+     public void initRoleAndUser() {
+          backofficeService.initBackoffice();
+      }
+
+
 
 
     @GetMapping("/forBackoffice")
