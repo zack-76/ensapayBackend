@@ -2,6 +2,10 @@ package org.spring.ensapay.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spring.ensapay.dto.AgentDto;
+
+import org.spring.ensapay.entity.Agent;
+import org.spring.ensapay.entity.Client;
+import org.spring.ensapay.entity.Facture;
 import org.spring.ensapay.service.AgentService;
 import org.spring.ensapay.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +19,6 @@ import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,35 +33,64 @@ public class AgentController {
     @Autowired
     private UserService userService;
 
-    @PostConstruct
-    public void initAgent(){agentService.initAgent();}
 
-    @PostMapping("/regiterNewUserAgent")
-    @PreAuthorize("hasRole('BackOffice')")
-    public ResponseEntity<String> regiterNewUserAgent(@RequestBody @Valid AgentDto agent) throws MessagingException,
-            UnsupportedEncodingException {
-        log.info("Agent"+agent.getAgentFirstName()+" "+agent.getAgentLastName() +"successfully added");
-        return ResponseEntity.status(HttpStatus.OK).body(agentService.registerNewUserAgent(agent));
-    }
-
-    @PostMapping("/uploadAgentIdentities")
+    @PostMapping("/regiterNewUserAgent/{id}")
     @PreAuthorize("hasRole('Backoffice')")
-    public void uploadAgentIdentity(@RequestParam("identity") MultipartFile[] identities) {
+
+    public ResponseEntity<String> regiterNewUserAgent(@RequestParam("file") MultipartFile[] identities,
+                                                      @RequestParam("agentPhone") String agentPhone,
+                                                      @RequestParam("agentFirstName") String agentFirstName,
+                                                      @RequestParam("agentLastName") String agentLastName,
+                                                      @RequestParam("agentAddress") String agentAddress,
+                                                      @RequestParam("agentCIN") String agentCIN,
+                                                      @RequestParam("agentEmail") String agentEmail,
+                                                      @RequestParam("agentCity") String agentCity,
+                                                      @RequestParam("agentZip") String agentZip,
+                                                      @RequestParam("agentCountry") String agentCountry,
+                                                      @RequestParam("agentusername") String agenusername,
+                                                      @PathVariable(value = "id") Long id)
+            throws Exception {
+
+        @Valid AgentDto agentDto = new AgentDto(agentPhone, agentFirstName, agentLastName, agentAddress, agentCIN, agentEmail, agentCity, agentZip, agentCountry, agenusername, id);
         try {
-            List<String> fileNames = new ArrayList<>();
             Arrays.asList(identities).stream().forEach(file -> {
                 agentService.save(file);
-                fileNames.add(file.getOriginalFilename());
+
+                log.info("Agent Identities has successfully stored");
             });
+            agentService.registerNewUserAgent(agentDto);
+            log.info("Client" + agentDto.getUsername() + " " + agentDto.getAgentLastName() + "added successfully ");
+
+
+            return ResponseEntity.status(HttpStatus.OK).body("client added");
+
         } catch (Exception e) {
-            log.warn("could't not store identites",e);
+            log.warn("could't not store identites", e);
+            return ResponseEntity.status(400).body("please try later");
         }
+
     }
 
-    @GetMapping("/forAgent")
-    @PreAuthorize("hasRole('Agent')")
-    public String forBackoffice(){
-        return "just Agent";
+
+    @GetMapping("/profileAgent/{username}")
+    public @ResponseBody
+    Agent getAgent(@PathVariable(value = "username") String username) {
+        return this.agentService.getAgentProfile(username);
     }
+
+    @GetMapping("/getClients/{id}")
+    @PreAuthorize("hasRole('Agent')")
+    public ResponseEntity<List<Client>> getAllClient(
+            @PathVariable("id") Long id) {
+        return ResponseEntity.status(200).body(this.agentService.getClients(id));
+    }
+
+    @GetMapping("/getClients/{id}/{client}")
+    @PreAuthorize("hasRole('Agent')")
+    public ResponseEntity<List<Client>> getAllClientwithSearch(
+            @PathVariable("id") Long id, @PathVariable("client") String name) {
+        return ResponseEntity.status(200).body(this.agentService.getClients(id, name));
+    }
+
 
 }

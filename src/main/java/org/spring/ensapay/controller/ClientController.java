@@ -2,6 +2,7 @@ package org.spring.ensapay.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spring.ensapay.dto.ClientDto;
+import org.spring.ensapay.entity.Agent;
 import org.spring.ensapay.entity.Client;
 import org.spring.ensapay.service.ClientService;
 import org.spring.ensapay.service.UserService;
@@ -16,9 +17,7 @@ import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -31,38 +30,56 @@ public class ClientController {
     @Autowired
     private UserService userService;
 
-    @PostConstruct
-    public void initAgent(){clientService.initClient();}
 
 
-    @PostMapping("/regiterNewUserClient")
+    @PostMapping("/regiterNewUserClient/{id}")
     @PreAuthorize("hasRole('Agent')")
-    public ResponseEntity<String> regiterNewUserClient(@Valid @RequestBody ClientDto client)
-            throws MessagingException,
-            UnsupportedEncodingException {
-        log.info("Client"+client.getClientFirstName()+" "+client.getClientLastName()+ "added successfully ");
-        return ResponseEntity.status(HttpStatus.OK).body(clientService.registerNewUserClient(client));
-    }
-
-    @PostMapping("/uploadClientIdentities")
-    @PreAuthorize("hasRole('Agent')")
-    public void uploadClientIdentity(@RequestParam("identity") MultipartFile[] identities) {
+    public ResponseEntity<String> uploadClientIdentity(@RequestParam(name = "file") MultipartFile[] identities,
+                                                       @RequestParam(name = "email") String email,
+                                                       @RequestParam(name = "FirstName") String firstName,
+                                                       @RequestParam(name = "LastName") String lastName,
+                                                       @RequestParam(name = "cin") String cin,
+                                                       @RequestParam(name = "Solde") Integer solde,
+                                                       @RequestParam(name = "Address") String address,
+                                                       @RequestParam(name = "Phone") String phone,
+                                                       @RequestParam(name = "City") String city,
+                                                       @RequestParam(name = "Zip") String zip,
+                                                       @RequestParam(name = "Country") String country,
+                                                       @PathVariable(value = "id") Long id)
+            throws MessagingException, UnsupportedEncodingException {
         try {
-            List<String> fileNames = new ArrayList<>();
+            ClientDto clientDto = new ClientDto(firstName, lastName, phone, cin, address, solde, email, city, zip, country,id);
             Arrays.asList(identities).stream().forEach(file -> {
                 clientService.save(file);
-                fileNames.add(file.getOriginalFilename());
+
                 log.info("Agent Identities has successfully stored");
             });
+            clientService.registerNewUserClient(clientDto);
+            log.info("Client" + clientDto.getClientFirstName() + " " + clientDto.getClientLastName() + "added successfully ");
+
+
+            return ResponseEntity.status(HttpStatus.OK).body("client added");
+
         } catch (Exception e) {
-            log.warn("could't not store identites",e);
+            log.warn("could't not store identites", e);
+            return ResponseEntity.status(400).body("please try later");
         }
+
+
     }
 
-    @GetMapping("/client/solde/{clientId}")
+
+
+    @GetMapping("/client/solde/{username}")
     @PreAuthorize("hasRole('Client')")
-    public ResponseEntity<Integer> ClientSolde(@PathVariable("clientId") Long clientId){
-        log.info("client"+clientId+" has got he's Solde");
-        return ResponseEntity.ok().body(clientService.getSolde(clientId));
+    public ResponseEntity<Integer> ClientSolde(@PathVariable("username") String username) {
+        log.info("client" + username + " has got he's Solde");
+        return ResponseEntity.ok().body(clientService.getSolde(username));
+    }
+
+    @GetMapping("/profileClient/{username}")
+    public @ResponseBody
+    Client getClient(@PathVariable(value = "username") String username) {
+        return this.clientService.getClientProfile(username);
     }
 }

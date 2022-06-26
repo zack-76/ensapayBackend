@@ -1,123 +1,147 @@
 package org.spring.ensapay.webservice;
 
-import org.spring.ensapay.entity.Creditor;
+import com.vonage.client.VonageClient;
+import com.vonage.client.sms.MessageStatus;
+import com.vonage.client.sms.SmsSubmissionResponse;
+import com.vonage.client.sms.messages.TextMessage;
+import net.bytebuddy.utility.RandomString;
+import org.spring.ensapay.dto.ValidatePaymentDto;
 import org.spring.ensapay.entity.Facture;
-import org.spring.ensapay.repository.ClientRepository;
-import org.spring.ensapay.repository.CreditorRepository;
-import org.spring.ensapay.repository.DebtRepository;
-import org.spring.ensapay.repository.FactureRepository;
+import org.spring.ensapay.entity.ValidatePayment;
+import org.spring.ensapay.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 @Service
+@Transactional
 public class WebServiceCMI {
 
-    private static final Integer generatedOTP = new Random().nextInt(999998 + 1)  + 100000;
-
     @Autowired
-    private CreditorRepository creditorRepository;
+    private ValidatePaymentRepository validatePaymentRepository;
 
-    @Autowired
-    private DebtRepository debtRepository;
 
     @Autowired
     private ClientRepository clientRepository;
 
-    @Autowired
-    private JavaMailSender mailSender;
 
     @Autowired
     private FactureRepository factureRepository;
 
 
-    public Integer sendGeneratedOTP() {
-       return WebServiceCMI.generatedOTP  ;
+    public String sendValidatetoken(String username) {
+        ValidatePayment validatePayment = validatePaymentRepository.findById(username).get();
+        return validatePayment.getToken();
     }
 
-    public List<Creditor> getAllCreditor(){
+    public Map<String, String> getImpay(String reference, String username) {
 
-        List<Creditor> creditors =  creditorRepository.findAll();
+        ValidatePayment validatePayment = new ValidatePayment();
+        validatePayment.setUsername(username);
+        validatePayment.setToken(RandomString.make(6));
+        validatePaymentRepository.save(validatePayment);
 
-        return creditors;
-    }
+        Map<String, Integer> impays = new HashMap<>();
+        impays.put("12ABT5670K", 300);
+        impays.put("4356LH8908", 1000);
+        impays.put("5686CHILKO", 200);
+        impays.put("0671886710", 250);
+        impays.put("0758091080", 100);
+        Map<String, String> ImpayQrCode = new HashMap<>();
 
-    public Integer getImpay(String reference){
 
-        Map<String,Integer> impays = new HashMap<>();
-        impays.put("12ABT5670K",300);
-        impays.put("4356LH8908",1000);
-        impays.put("5686CHILKO",200);
-        impays.put("0671886710",250);
-        impays.put("0758091080",100);
-
-        return impays.entrySet().stream().filter(i -> reference.equals(i.getKey()))
+        int Impay = impays.entrySet().stream().filter(i -> reference.equals(i.getKey()))
                 .map(Map.Entry::getValue).findFirst().orElse(null);
+        ImpayQrCode.put("donnateur", this.clientRepository.findClientFullNameByClientUserUsername(username));
+        ImpayQrCode.put("impay", Impay + "");
+        ImpayQrCode.put("QrCode", RandomString.make(4));
+        return ImpayQrCode;
     }
 
-    public String validate(Integer generatedtoken, Long clientId , Integer impaye,String codeCreditor,String codeDept)
-            throws MessagingException, UnsupportedEncodingException {
+    public String validate(ValidatePaymentDto validatePaymentDto, String username) {
 
-        if(generatedtoken == WebServiceCMI.generatedOTP){
-            Integer clientSolde = clientRepository.findClientSoldeByClientId(clientId);
-            if(clientSolde >= impaye){
-                clientRepository.updateClientSoldeByClientId(clientSolde-=impaye,clientId);
-                addFacture(clientId,codeCreditor,codeDept,impaye);
-                sendValidateEmail(clientId);
-                return "success";
-            }else
-                return "can't pursuite your operation your solde is lower the facture's debt";
+        Integer clientSolde = clientRepository.findClientSoldeByClientId(username);
+        if (clientSolde >= validatePaymentDto.getImpaye()) {
+            clientRepository.updateClientSoldeByClientId(clientSolde -= validatePaymentDto.getImpaye(), username);
+            addFacture(username, validatePaymentDto.getNameCreditor(),
+                    validatePaymentDto.getNameDept(),
+                    validatePaymentDto.getImpaye());
+            return "success";
+        } else {
+            throw new RuntimeException("error");
         }
-        return "Something went wrong";
+
     }
 
-    public void addFacture(Long clientId,String codeCreditor,String codeDept,Integer impayé){
-        Facture facture =  new Facture();
-        facture.setReference( new Random().nextInt(999998+1)+100000);
-        String clientFullName = clientRepository.findClientFirstNameByClientId(clientId)+" "+clientRepository.findClientLastNameByClientId(clientId);
+
+    public void addFacture(String username, String nameCreditor, String nameDebt, Integer impayé) {
+        Facture facture = new Facture();
+        facture.setReference(new Random().nextInt(999998 + 1) + 100000);
+        String clientFullName = clientRepository.findClientFullNameByClientUserUsername(username);
+        facture.setNumeroClient(username);
         facture.setClientName(clientFullName);
-        String nameCreditor = creditorRepository.findCreditorNameByCodeCreditor(codeCreditor);
         facture.setCreditorName(nameCreditor);
-        String nameDebt = debtRepository.findDebtNameByCodeDebt(codeDept);
         facture.setDebtName(nameDebt);
         facture.setImpaye(impayé);
         factureRepository.save(facture);
     }
 
-    public List<Facture> getFactures(){
+    public void sendValidateSms(String username) {
+
+        ValidatePayment validatePayment = validatePaymentRepository.findById(username).get();
+
+        String message = "Hello Client: \n"
+                + "Please enter this Token to verify your identity: "
+                + validatePayment.getToken();
+
+        TextMessage msg = new TextMessage("Ensa Pay Service",
+                "+212" + username.substring(1),
+                message
+        );
+
+        VonageClient client =
+                VonageClient.builder().apiKey("cb282c90").apiSecret("zVM3NTagQbOITp83").build();
+
+        SmsSubmissionResponse response = client.getSmsClient().submitMessage(msg);
+
+        if (response.getMessages().get(0).getStatus() == MessageStatus.OK) {
+            System.out.println("Message sent successfully.");
+        } else {
+            System.out.println("Message failed with error: " + response.getMessages().get(0).getErrorText());
+        }
+
+    }
+
+
+    public List<Facture> getFactures() {
         return factureRepository.findAll();
     }
 
-    public void sendValidateEmail(Long id)
-            throws MessagingException, UnsupportedEncodingException {
 
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message,true);
+    public List<Facture> getFacutreByClientName(String username) {
 
-        helper.setFrom("ensapay_2022@outlook.com");
-        String clientEmail =  clientRepository.findClientEmailByClientId(id);
-        String clientFirstName = clientRepository.findClientFirstNameByClientId(id);
-        String clientLastName =  clientRepository.findClientLastNameByClientId(id);
-        helper.setTo(clientEmail);
+        return factureRepository.findByNumeroClient(username);
+    }
 
-        String subject = "Payment success";
-        String content = "<p>Hello Client " + clientFirstName + " "+clientLastName+"</p>"
-                + "<p>Your Payment has been with succes"
-                + "<p>Note: Our EnsaPay platform give you the best and the secure services.</p>";
+    public List<Facture> getFacutreByClientNameCreditor(String username, String creditor) {
 
-        helper.setSubject(subject);
+        return factureRepository.findByClientNameAndCreditorName(username, creditor);
+    }
 
-        helper.setText(content,true );
+    public void validateToken(String username, String token) throws Exception {
+        ValidatePayment validatePayment = validatePaymentRepository.findByUsername(username);
 
-        mailSender.send(message);
+        if (token.equals(validatePayment.getToken())) {
+            validatePaymentRepository.deleteById(username);
+
+        } else {
+            throw new Exception();
+        }
+
     }
 }
